@@ -124,11 +124,11 @@ html, body {
 .get-started-button {
     display: block;
 }
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
   .get-started-button {
     display: block;
   }
-}
+} */
 
 @media (min-width: 320px) {
   .slogan-container, .appName {
