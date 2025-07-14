@@ -18,7 +18,7 @@ const LandingPage = (): JSX.Element => {
                     <p className="black-text">BETTiNG</p>
                     <p className="blue-text">MADE</p>
                     <p className="black-text">SiMPLE</p>
-                    <button type="button" className="get-started-button" onClick={()=>navigate('/home')}> GET STARTED</button>
+                    <button type="button" className="get-started-button" onClick={()=>navigate('/Auth')}> GET STARTED</button>
                 </section>
             </section>
         </section>
