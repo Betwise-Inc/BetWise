@@ -9,7 +9,6 @@
 html, body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
   height: 100%;
   width: 100%;
 
@@ -83,6 +82,7 @@ html, body {
     font-size: 5.5rem;
     margin-right: 5rem;
     margin-left: 5rem;
+    color:#E5E5E5 ;
 }
 
 .mobile-header {

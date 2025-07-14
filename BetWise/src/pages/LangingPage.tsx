@@ -1,8 +1,10 @@
 import type { JSX } from "react";
 import "../styles/LandingPage.css";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = (): JSX.Element => {
-  return (
+    const navigate = useNavigate();
+    return (
     <main className="landingPage">
          <header className="mobile-header">
             <button type="button" className="get-started-mobile"> GET STARTED</button>
@@ -16,7 +18,7 @@ const LandingPage = (): JSX.Element => {
                     <p className="black-text">BETTiNG</p>
                     <p className="blue-text">MADE</p>
                     <p className="black-text">SiMPLE</p>
-                    <button type="button" className="get-started-button"> GET STARTED</button>
+                    <button type="button" className="get-started-button" onClick={()=>navigate('/home')}> GET STARTED</button>
                 </section>
             </section>
         </section>
