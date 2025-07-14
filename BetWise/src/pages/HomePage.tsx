@@ -1,7 +1,8 @@
 import type { JSX } from "react";
 import "../styles/HomePage.css";
 import { useState } from "react";
-
+//Competitions db,id = competition name from livescore API
+//Admins can add competitions
 const leagues = [
   { id: 'premier', name: 'Premier League', country: 'England', color: 'purple' },
   { id: 'laliga', name: 'La Liga', country: 'Spain', color: 'orange' },
@@ -10,7 +11,7 @@ const leagues = [
   { id: 'ligue1', name: 'Ligue 1', country: 'France', color: 'blue' },
   { id: 'psl', name: 'Betway Premiership', country: 'South Africa', color: 'black' },
 ];
-
+//From fixtures API(livescore) - using competition name from competition db
 const dummySerieA = [
   "Juventus VS Napoli",
   "Inter Milan VS AC Milan",
