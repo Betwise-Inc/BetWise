@@ -63,6 +63,7 @@ html, body {
     padding: 0.75rem 1.8rem;
     margin-top: 2rem;
     border-radius: 10px;
+    z-index: 10;
     transition: background-color 0.2s ease;
 }
 .get-started-button:hover{
@@ -107,6 +108,7 @@ html, body {
     border-radius: 10px;
     border: none;
     font-weight: bold;
+    z-index: 10;
     transition: background-color 0.2s ease;
     margin-right: 2rem;
 }
