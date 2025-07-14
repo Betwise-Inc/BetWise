@@ -7,7 +7,7 @@ const LandingPage = (): JSX.Element => {
     return (
     <main className="landingPage">
          <header className="mobile-header">
-            <button type="button" className="get-started-mobile"> GET STARTED</button>
+            <button type="button" className="get-started-mobile" onClick={()=>navigate('/home')}> GET STARTED</button>
         </header>
         <section className="landing-container">
             <section className="landing-left">
