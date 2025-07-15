@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/signup.css";
+import { createUser } from "../APIconfigs/Users";
 type SignupFormProps = {
   isActive: boolean;
   onAlreadyHaveAccountClick: () => void;
@@ -21,7 +22,9 @@ const SignUp: React.FC<SignupFormProps> = ({ onAlreadyHaveAccountClick }) => {
     }
 
     try {
+      
       setSuccess("Account created successfully!");
+      await createUser(email);
       setError(null);
     } catch (err: any) {
       setError(err.message);

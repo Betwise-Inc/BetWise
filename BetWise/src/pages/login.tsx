@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { createUser, getUserByEmail } from "../APIconfigs/Users";
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -12,9 +13,7 @@ type LoginFormProps = {
   onCreateAccountClick: () => void;
 };
 
-const Login: React.FC<LoginFormProps> = ({
-  onCreateAccountClick,
-}) => {
+const Login: React.FC<LoginFormProps> = ({ onCreateAccountClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -39,7 +38,19 @@ const Login: React.FC<LoginFormProps> = ({
     const provider = new GoogleAuthProvider();
 
     try {
-      await signInWithPopup(auth, provider);
+      
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      if (user && user.email) {
+      
+        const existingUser = await getUserByEmail(user.email);
+
+      
+        if (!existingUser) {
+          await createUser(user.email);
+        }
+      }
       navigate("/home");
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -85,7 +96,7 @@ const Login: React.FC<LoginFormProps> = ({
           />
           Sign in with Google
         </button>
-        {error && <p  className="login-error">{error}</p>}
+        {error && <p className="login-error">{error}</p>}
       </form>
       <section className="no-account">
         <p>
