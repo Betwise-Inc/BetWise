@@ -1,5 +1,6 @@
 import type { JSX } from "react";
 import "../styles/LandingPage.css";
+import "../styles/Nav.css";
 import { useNavigate } from "react-router-dom";
 
 const LandingPage = (): JSX.Element => {
