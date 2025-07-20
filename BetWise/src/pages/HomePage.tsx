@@ -199,8 +199,19 @@ const HomePage = (): JSX.Element => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </section>
+        {searchQuery.trim() !== '' && (
+          <ul className="history-list">
+            {filteredTeams.length > 0 ? (
+              filteredTeams.map((team, index) => (
+                <li key={index} className="history-item">{team}</li>
+              ))
+            ) : (
+              <p className="no-fixtures">No teams found.</p>
+            )}
+          </ul>
+        )}
+      
         <footer className="footer">
-
 
         © {new Date().getFullYear()} BetWise. All rights reserved.
       </footer>
