@@ -14,6 +14,15 @@ import betwayPremiershipLogo from '../assets/betwaypremiership.svg';
 
 
 
+import { useState, useRef } from "react";
+import laligaLogo from '../assets/laliga_logo.svg';
+import premierleagueLogo from '../assets/premierLeagueLogo.svg';
+import bundesligaLogo from '../assets/bundesligaLogo.svg';
+import serialLogo from '../assets/serieaLogo.svg';
+import ligue1logo from '../assets/ligue1Logo.svg';
+import betwayPremiershipLogo from '../assets/betwaypremiership.svg';
+
+
 import { auth } from "../../firebaseConfig";
 import { useNavigate } from "react-router-dom";
 //Competitions db,id = competition name from livescore API
@@ -26,6 +35,7 @@ const leagues = [
   { id: 'ligue1', name: 'Ligue 1', country: 'France', color: 'blue', logo: ligue1logo },
   { id: 'psl', name: 'Betway Premiership', country: 'South Africa', color: 'black', logo: betwayPremiershipLogo },
 ];
+
 
 
 const dummySerieA = [
@@ -81,9 +91,14 @@ const getFixtures = (leagueId: string): string[] => {
 };
 
 const HomePage = (): JSX.Element => {
+
+
+
   const fixturesRef = useRef<HTMLElement>(null);
   const [selectedLeague, setSelectedLeague] = useState('premier');
   const [searchQuery, setSearchQuery] = useState('');
+
+
   const fixtures = getFixtures(selectedLeague);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -150,10 +165,12 @@ const HomePage = (): JSX.Element => {
           {leagues.map((league) => (
             <button
               key={league.id}
+
               onClick={() => handleLeagueClick(league.id)}
               className={`league-button ${selectedLeague === league.id ? 'selected' : ''}`}
             >
               <section className="league-logo" ><img src={league.logo} alt={`${league.name} logo`} width={20} height={20} /></section>
+
               <section className="league-text">
                 <section className="league-name">{league.name}</section>
                 <section className="league-country">{league.country}</section>
@@ -162,6 +179,7 @@ const HomePage = (): JSX.Element => {
           ))}
         </section>
       </section>
+
 
       <section ref={fixturesRef} className="fixtures section">
         <h2 className="section-title">Fixtures</h2>
@@ -175,6 +193,7 @@ const HomePage = (): JSX.Element => {
         ) : (
           <p className="no-fixtures">No fixtures available.</p>
         )}
+
       </section>
 
       <section className="history section">
@@ -189,19 +208,9 @@ const HomePage = (): JSX.Element => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </section>
-
-        {searchQuery.trim() !== '' && (
-          <ul className="history-list">
-            {filteredTeams.length > 0 ? (
-              filteredTeams.map((team, index) => (
-                <li key={index} className="history-item">{team}</li>
-              ))
-            ) : (
-              <p className="no-fixtures">No teams found.</p>
-            )}
-          </ul>
-        )}
         <footer className="footer">
+
+
         © {new Date().getFullYear()} BetWise. All rights reserved.
       </footer>
       </section>
