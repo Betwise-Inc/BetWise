@@ -2,29 +2,31 @@ import type { JSX } from "react";
 import { useState, useEffect } from "react";
 import "../styles/HomePage.css";
 
+import { useState, useRef } from "react";
+import laligaLogo from '../assets/laliga_logo.svg';
+import premierleagueLogo from '../assets/premierLeagueLogo.svg';
+import bundesligaLogo from '../assets/bundesligaLogo.svg';
+import serialLogo from '../assets/serieaLogo.svg';
+import ligue1logo from '../assets/ligue1Logo.svg';
+import betwayPremiershipLogo from '../assets/betwaypremiership.svg';
+
+
 import { auth } from "../../firebaseConfig";
 import { useNavigate } from "react-router-dom";
 //Competitions db,id = competition name from livescore API
 //Admins can add competitions
 const leagues = [
-  {
-    id: "premier",
-    name: "Premier League",
-    country: "England",
-    color: "purple",
-  },
-  { id: "laliga", name: "La Liga", country: "Spain", color: "orange" },
-  { id: "seriea", name: "Serie A", country: "Italy", color: "green" },
-  { id: "bundesliga", name: "Bundesliga", country: "Germany", color: "red" },
-  { id: "ligue1", name: "Ligue 1", country: "France", color: "blue" },
-  {
-    id: "psl",
-    name: "Betway Premiership",
-    country: "South Africa",
-    color: "black",
-  },
+  { id: 'premier', name: 'Premier League', country: 'England', color: 'purple', logo: premierleagueLogo },
+  { id: 'laliga', name: 'La Liga', country: 'Spain', color: 'orange', logo: laligaLogo },
+  { id: 'seriea', name: 'Serie A', country: 'Italy', color: 'green', logo: serialLogo },
+  { id: 'bundesliga', name: 'Bundesliga', country: 'Germany', color: 'red', logo: bundesligaLogo },
+  { id: 'ligue1', name: 'Ligue 1', country: 'France', color: 'blue', logo: ligue1logo },
+  { id: 'psl', name: 'Betway Premiership', country: 'South Africa', color: 'black', logo: betwayPremiershipLogo },
 ];
-//From fixtures API(livescore) - using competition name from competition db
+
+
+
+
 const dummySerieA = [
   "Juventus VS Napoli",
   "Inter Milan VS AC Milan",
@@ -78,8 +80,11 @@ const getFixtures = (leagueId: string): string[] => {
 };
 
 const HomePage = (): JSX.Element => {
-  const [selectedLeague, setSelectedLeague] = useState("premier");
-  const [searchQuery, setSearchQuery] = useState("");
+
+  const fixturesRef = useRef<HTMLElement>(null);
+  const [selectedLeague, setSelectedLeague] = useState('premier');
+  const [searchQuery, setSearchQuery] = useState('');
+
   const fixtures = getFixtures(selectedLeague);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -106,6 +111,11 @@ const HomePage = (): JSX.Element => {
   const filteredTeams = dummyTeams.filter((team) =>
     team.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleLeagueClick = (leagueId: string) => {
+    setSelectedLeague(leagueId);
+    fixturesRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <main className="home-page">
@@ -141,15 +151,12 @@ const HomePage = (): JSX.Element => {
           {leagues.map((league) => (
             <button
               key={league.id}
-              onClick={() => setSelectedLeague(league.id)}
-              className={`league-button ${
-                selectedLeague === league.id ? "selected" : ""
-              }`}
+
+              onClick={() => handleLeagueClick(league.id)}
+              className={`league-button ${selectedLeague === league.id ? 'selected' : ''}`}
             >
-              <section
-                className="league-dot"
-                style={{ backgroundColor: league.color }}
-              ></section>
+              <section className="league-logo" ><img src={league.logo} alt={`${league.name} logo`} width={20} height={20} /></section>
+
               <section className="league-text">
                 <section className="league-name">{league.name}</section>
                 <section className="league-country">{league.country}</section>
@@ -157,24 +164,22 @@ const HomePage = (): JSX.Element => {
             </button>
           ))}
         </section>
+      </section>
 
-        <section className="fixtures section">
-          <h2 className="section-title">Fixtures</h2>
-          <p className="fixtures-subheading">
-            Select the fixture you want predictions for.
-          </p>
-          {fixtures.length > 0 ? (
-            <ul className="fixtures-list">
-              {fixtures.map((match, index) => (
-                <li key={index} className="fixture-item">
-                  {match}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="no-fixtures">No fixtures available.</p>
-          )}
-        </section>
+      <section ref={fixturesRef} className="fixtures section">
+        <h2 className="section-title">Fixtures</h2>
+        <p className="fixtures-subheading">Select the fixture you want predictions for.</p>
+        {fixtures.length > 0 ? (
+          <ul className="fixtures-list">
+            {fixtures.map((match, index) => (
+              <li key={index} className="fixture-item">{match}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="no-fixtures">No fixtures available.</p>
+        )}
+
+
       </section>
 
       <section className="history section">
@@ -190,24 +195,26 @@ const HomePage = (): JSX.Element => {
           />
         </section>
 
-        {searchQuery.trim() !== "" && (
+
+        {searchQuery.trim() !== '' && (
           <ul className="history-list">
             {filteredTeams.length > 0 ? (
               filteredTeams.map((team, index) => (
-                <li key={index} className="history-item">
-                  {team}
-                </li>
+                <li key={index} className="history-item">{team}</li>
               ))
             ) : (
               <p className="no-fixtures">No teams found.</p>
             )}
           </ul>
         )}
-      </section>
 
-      <footer className="footer">
+        <footer className="footer">
+
         © {new Date().getFullYear()} BetWise. All rights reserved.
       </footer>
+      </section>
+
+       
     </main>
   );
 };
