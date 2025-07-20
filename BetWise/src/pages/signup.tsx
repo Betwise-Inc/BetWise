@@ -28,7 +28,7 @@ const SignUp: React.FC<SignupFormProps> = ({ onAlreadyHaveAccountClick }) => {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
       await createUser(email);
       setMessage({ type: "success", text: "Account created successfully!" });
       setForm({ email: "", password: "", confirmPassword: "" });
