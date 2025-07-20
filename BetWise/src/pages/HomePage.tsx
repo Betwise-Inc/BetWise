@@ -14,15 +14,6 @@ import betwayPremiershipLogo from '../assets/betwaypremiership.svg';
 
 
 
-import { useState, useRef } from "react";
-import laligaLogo from '../assets/laliga_logo.svg';
-import premierleagueLogo from '../assets/premierLeagueLogo.svg';
-import bundesligaLogo from '../assets/bundesligaLogo.svg';
-import serialLogo from '../assets/serieaLogo.svg';
-import ligue1logo from '../assets/ligue1Logo.svg';
-import betwayPremiershipLogo from '../assets/betwaypremiership.svg';
-
-
 import { auth } from "../../firebaseConfig";
 import { useNavigate } from "react-router-dom";
 //Competitions db,id = competition name from livescore API
