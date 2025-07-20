@@ -1,6 +1,18 @@
 import type { JSX } from "react";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import "../styles/HomePage.css";
+import { useState, useRef } from "react";
+import laligaLogo from '../assets/laliga_logo.svg';
+import premierleagueLogo from '../assets/premierLeagueLogo.svg';
+import bundesligaLogo from '../assets/bundesligaLogo.svg';
+import serialLogo from '../assets/serieaLogo.svg';
+import ligue1logo from '../assets/ligue1Logo.svg';
+import betwayPremiershipLogo from '../assets/betwaypremiership.svg';
+
+
+
+
+
 
 import { useState, useRef } from "react";
 import laligaLogo from '../assets/laliga_logo.svg';
@@ -23,7 +35,6 @@ const leagues = [
   { id: 'ligue1', name: 'Ligue 1', country: 'France', color: 'blue', logo: ligue1logo },
   { id: 'psl', name: 'Betway Premiership', country: 'South Africa', color: 'black', logo: betwayPremiershipLogo },
 ];
-
 
 
 
@@ -81,9 +92,12 @@ const getFixtures = (leagueId: string): string[] => {
 
 const HomePage = (): JSX.Element => {
 
+
+
   const fixturesRef = useRef<HTMLElement>(null);
   const [selectedLeague, setSelectedLeague] = useState('premier');
   const [searchQuery, setSearchQuery] = useState('');
+
 
   const fixtures = getFixtures(selectedLeague);
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -166,6 +180,7 @@ const HomePage = (): JSX.Element => {
         </section>
       </section>
 
+
       <section ref={fixturesRef} className="fixtures section">
         <h2 className="section-title">Fixtures</h2>
         <p className="fixtures-subheading">Select the fixture you want predictions for.</p>
@@ -178,7 +193,6 @@ const HomePage = (): JSX.Element => {
         ) : (
           <p className="no-fixtures">No fixtures available.</p>
         )}
-
 
       </section>
 
@@ -194,21 +208,8 @@ const HomePage = (): JSX.Element => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </section>
-
-
-        {searchQuery.trim() !== '' && (
-          <ul className="history-list">
-            {filteredTeams.length > 0 ? (
-              filteredTeams.map((team, index) => (
-                <li key={index} className="history-item">{team}</li>
-              ))
-            ) : (
-              <p className="no-fixtures">No teams found.</p>
-            )}
-          </ul>
-        )}
-
         <footer className="footer">
+
 
         © {new Date().getFullYear()} BetWise. All rights reserved.
       </footer>
