@@ -1,36 +1,42 @@
 import React, { useState } from "react";
 import "../styles/signup.css";
+import { auth } from "../../firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { createUser } from "../APIconfigs/Users";
+
 type SignupFormProps = {
   isActive: boolean;
   onAlreadyHaveAccountClick: () => void;
 };
 
 const SignUp: React.FC<SignupFormProps> = ({ onAlreadyHaveAccountClick }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null); // State for success message
+  const [form, setForm] = useState({ email: "", password: "", confirmPassword: "" });
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const { email, password, confirmPassword } = form;
+
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setMessage({ type: "error", text: "Passwords do not match" });
       return;
     }
 
     try {
-      
-      setSuccess("Account created successfully!");
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await createUser(email);
-      setError(null);
+      setMessage({ type: "success", text: "Account created successfully!" });
+      setForm({ email: "", password: "", confirmPassword: "" });
     } catch (err: any) {
-      setError(err.message);
-      setSuccess(null);
+      setMessage({ type: "error", text: err.message });
     }
   };
+
   return (
     <section className="signup-container">
       <h2 className="signup-title">Sign Up</h2>
@@ -38,36 +44,41 @@ const SignUp: React.FC<SignupFormProps> = ({ onAlreadyHaveAccountClick }) => {
         <input
           test-id="email-input"
           type="email"
+          name="email"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={form.email}
+          onChange={handleChange}
           required
           className="signup-email"
         />
         <input
           test-id="password-input"
           type="password"
+          name="password"
           placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={form.password}
+          onChange={handleChange}
           required
           className="signup-password"
         />
         <input
           test-id="confirm-password-input"
           type="password"
+          name="confirmPassword"
           placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={form.confirmPassword}
+          onChange={handleChange}
           required
           className="signup-confirm-password"
         />
         <button type="submit" className="signup-button">
           Sign Up
         </button>
-        {error && <p className="signup-error">{error}</p>}
-        {success && <p className="signup-success">{success}</p>}{" "}
-        {/* Display success message */}
+        {message && (
+          <p className={message.type === "error" ? "signup-error" : "signup-success"}>
+            {message.text}
+          </p>
+        )}
       </form>
       <section className="have-account">
         <p>

@@ -40,8 +40,9 @@ const Login: React.FC<LoginFormProps> = ({ onCreateAccountClick }) => {
     try {
       
       const result = await signInWithPopup(auth, provider);
+      navigate("/home");
       const user = result.user;
-
+      
       if (user && user.email) {
       
         const existingUser = await getUserByEmail(user.email);
@@ -51,7 +52,7 @@ const Login: React.FC<LoginFormProps> = ({ onCreateAccountClick }) => {
           await createUser(user.email);
         }
       }
-      navigate("/home");
+      
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
