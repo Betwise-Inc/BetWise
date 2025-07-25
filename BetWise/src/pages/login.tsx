@@ -46,7 +46,7 @@ const Login: React.FC<LoginFormProps> = ({ onCreateAccountClick }) => {
       if (user && user.email) {
       
         const existingUser = await getUserByEmail(user.email);
-
+        
       
         if (!existingUser) {
           await createUser(user.email);

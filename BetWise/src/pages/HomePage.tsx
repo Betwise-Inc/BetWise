@@ -2,32 +2,22 @@ import type { JSX } from "react";
 import { useEffect } from "react";
 import "../styles/HomePage.css";
 import { useState, useRef } from "react";
-import laligaLogo from '../assets/laliga_logo.svg';
-import premierleagueLogo from '../assets/premierLeagueLogo.svg';
-import bundesligaLogo from '../assets/bundesligaLogo.svg';
-import serialLogo from '../assets/serieaLogo.svg';
-import ligue1logo from '../assets/ligue1Logo.svg';
-import betwayPremiershipLogo from '../assets/betwaypremiership.svg';
-
-
-
-
-
-
+import {
+  getCompetitions,
+  AddCompetition,
+  deleteCompetitionById,
+} from "../APIconfigs/Competitions";
 import { auth } from "../../firebaseConfig";
 import { useNavigate } from "react-router-dom";
+import { getUserByEmail } from "../APIconfigs/Users";
 //Competitions db,id = competition name from livescore API
 //Admins can add competitions
-const leagues = [
-  { id: 'premier', name: 'Premier League', country: 'England', color: 'purple', logo: premierleagueLogo },
-  { id: 'laliga', name: 'La Liga', country: 'Spain', color: 'orange', logo: laligaLogo },
-  { id: 'seriea', name: 'Serie A', country: 'Italy', color: 'green', logo: serialLogo },
-  { id: 'bundesliga', name: 'Bundesliga', country: 'Germany', color: 'red', logo: bundesligaLogo },
-  { id: 'ligue1', name: 'Ligue 1', country: 'France', color: 'blue', logo: ligue1logo },
-  { id: 'psl', name: 'Betway Premiership', country: 'South Africa', color: 'black', logo: betwayPremiershipLogo },
-];
-
-
+type Competition = {
+  _id: number; // Or `string` if you're using string IDs
+  name: string;
+  country: string;
+  logo: string;
+};
 
 const dummySerieA = [
   "Juventus VS Napoli",
@@ -66,15 +56,15 @@ const dummyTeams = [
 
 const getFixtures = (leagueId: string): string[] => {
   switch (leagueId) {
-    case "premier":
+    case "2":
       return dummyPremierLeague;
-    case "laliga":
+    case "3":
       return dummyLaliga;
-    case "seriea":
+    case "4":
       return dummySerieA;
-    case "bundesliga":
+    case "1":
       return dummyBundesliga;
-    case "ligue1":
+    case "5":
       return dummyLigue1;
     default:
       return [];
@@ -82,27 +72,59 @@ const getFixtures = (leagueId: string): string[] => {
 };
 
 const HomePage = (): JSX.Element => {
-
-
+  const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
 
   const fixturesRef = useRef<HTMLElement>(null);
-  const [selectedLeague, setSelectedLeague] = useState('premier');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedLeague, setSelectedLeague] = useState("2");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [competitions, setCompetitions] = useState<Competition[]>([]);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newCompetition, setNewCompetition] = useState({
+    _id: 0,
+    name: "",
+    country: "",
+    logo: "",
+  });
 
-
+  const [user, setUser] = useState<{
+    email: string | null;
+    isAdmin: boolean;
+  } | null>(null);
   const fixtures = getFixtures(selectedLeague);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUserEmail(user.email);
+    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
+      if (firebaseUser) {
+        const email = firebaseUser.email;
+        if (email) {
+          try {
+            const userData = await getUserByEmail(email);
+            setUser({ email, isAdmin: userData?.isAdmin || false });
+          } catch {
+            setUser({ email, isAdmin: false });
+          }
+        } else {
+          setUser({ email: null, isAdmin: false });
+        }
       } else {
-        setUserEmail(null);
+        setUser(null);
       }
     });
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const fetchCompetitions = async () => {
+      try {
+        const data = await getCompetitions();
+        setCompetitions(data);
+      } catch (error) {
+        console.error("Error fetching competitions:", error);
+      }
+    };
+
+    fetchCompetitions();
   }, []);
 
   const handleLogoutClick = async () => {
@@ -121,6 +143,19 @@ const HomePage = (): JSX.Element => {
     setSelectedLeague(leagueId);
     fixturesRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+  const handleAddCompetition = async () => {
+    try {
+      const { _id, name, country, logo } = newCompetition;
+      await AddCompetition(_id, name, country, logo);
+
+      setShowAddForm(false);
+      setNewCompetition({ _id: 0, name: "", country: "", logo: "" }); 
+      const data = await getCompetitions();
+      setCompetitions(data);
+    } catch (err) {
+      console.error("Error adding competition:", err);
+    }
+  };
 
   return (
     <main className="home-page">
@@ -137,11 +172,13 @@ const HomePage = (): JSX.Element => {
             rel="noopener noreferrer"
             className="navbar-username"
           >
-            {userEmail}
+            {user?.email}
           </a>
         </section>
         <section className="navbar-right">
-          <button onClick={handleLogoutClick} className="logout">Logout</button>
+          <button onClick={handleLogoutClick} className="logout">
+            Logout
+          </button>
         </section>
       </section>
       <section className="heading-section">
@@ -153,38 +190,164 @@ const HomePage = (): JSX.Element => {
       <section className="league-section">
         <h2 className="section-title">Select Your League</h2>
         <section className="league-buttons">
-          {leagues.map((league) => (
-            <button
-              key={league.id}
+          {competitions.map((league) => (
+            <section className="league-wrapper" key={league._id.toString()}>
+              <button
+                onClick={() => handleLeagueClick(league._id.toString())}
+                className={`league-button ${
+                  selectedLeague === league._id.toString() ? "selected" : ""
+                }`}
+              >
+                <section className="league-logo">
+                  <img
+                    src={league.logo}
+                    alt={`${league.name} logo`}
+                    width={20}
+                    height={20}
+                  />
+                </section>
 
-              onClick={() => handleLeagueClick(league.id)}
-              className={`league-button ${selectedLeague === league.id ? 'selected' : ''}`}
-            >
-              <section className="league-logo" ><img src={league.logo} alt={`${league.name} logo`} width={20} height={20} /></section>
+                <section className="league-text">
+                  <section className="league-name">{league.name}</section>
+                  <section className="league-country">{league.country}</section>
+                </section>
+              </button>
 
-              <section className="league-text">
-                <section className="league-name">{league.name}</section>
-                <section className="league-country">{league.country}</section>
-              </section>
-            </button>
+              {user?.isAdmin && (
+                <div className="dots-wrapper">
+                  <button
+                    className="dots-button"
+                    aria-label="More options"
+                    onClick={() =>
+                      setOpenDropdownId(
+                        openDropdownId === league._id ? null : league._id
+                      )
+                    }
+                  >
+                    ⋮
+                  </button>
+                  {openDropdownId === league._id && (
+                    <ul className="dropdown-menu">
+                      <li
+                        className="dropdown-item"
+                        onClick={async () => {
+                          const confirmDelete = window.confirm(
+                            `Are you sure you want to delete ${league.name}?`
+                          );
+                          if (confirmDelete) {
+                            try {
+                              await deleteCompetitionById(league._id);
+                              
+                              setOpenDropdownId(null);
+                          
+                              const data = await getCompetitions();
+                              setCompetitions(data);
+                             
+                              if (selectedLeague === league._id.toString()) {
+                                setSelectedLeague("");
+                              }
+                            } catch (error) {
+                              console.error(
+                                "Error deleting competition:",
+                                error
+                              );
+                             
+                            }
+                          } else {
+                            setOpenDropdownId(null);
+                          }
+                        }}
+                      >
+                        Delete
+                      </li>
+                      <li
+                        className="dropdown-item"
+                        onClick={() => {
+                          alert(`Modify ${league.name} (to be implemented)`);
+                          setOpenDropdownId(null);
+                        }}
+                      >
+                        Modify
+                      </li>
+                    </ul>
+                  )}
+                </div>
+              )}
+            </section>
           ))}
         </section>
+        {user?.isAdmin && (
+          <section className="add-competition-container">
+            <button
+              className="add-competition-button"
+              onClick={() => setShowAddForm(!showAddForm)}
+            >
+              {showAddForm ? "Cancel" : "+ Add Competition"}
+            </button>
+          </section>
+        )}
+        {showAddForm && (
+          <section className="add-competition-form">
+            <input
+              type="number"
+              placeholder="ID"
+              value={newCompetition._id}
+              onChange={(e) =>
+                setNewCompetition({
+                  ...newCompetition,
+                  _id: Number(e.target.value),
+                })
+              }
+            />
+            <input
+              type="text"
+              placeholder="League Name"
+              value={newCompetition.name}
+              onChange={(e) =>
+                setNewCompetition({ ...newCompetition, name: e.target.value })
+              }
+            />
+            <input
+              type="text"
+              placeholder="Country"
+              value={newCompetition.country}
+              onChange={(e) =>
+                setNewCompetition({
+                  ...newCompetition,
+                  country: e.target.value,
+                })
+              }
+            />
+            <input
+              type="text"
+              placeholder="Logo URL (e.g., /assets/laliga_logo.svg)"
+              value={newCompetition.logo}
+              onChange={(e) =>
+                setNewCompetition({ ...newCompetition, logo: e.target.value })
+              }
+            />
+            <button onClick={handleAddCompetition} className="submit-button">
+              Submit
+            </button>
+          </section>
+        )}
       </section>
-
-
       <section ref={fixturesRef} className="fixtures section">
         <h2 className="section-title">Fixtures</h2>
-        <p className="fixtures-subheading">Select the fixture you want predictions for.</p>
+        <p className="fixtures-subheading">
+          Select the fixture you want predictions for.
+        </p>
         {fixtures.length > 0 ? (
           <ul className="fixtures-list">
             {fixtures.map((match, index) => (
-              <li key={index} className="fixture-item">{match}</li>
+              <li key={index} className="fixture-item">
+                {match}
+              </li>
             ))}
           </ul>
         ) : (
           <p className="no-fixtures">No fixtures available.</p>
         )}
-
       </section>
 
       <section className="history section">
@@ -199,25 +362,24 @@ const HomePage = (): JSX.Element => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </section>
-        {searchQuery.trim() !== '' && (
+        {searchQuery.trim() !== "" && (
           <ul className="history-list">
             {filteredTeams.length > 0 ? (
               filteredTeams.map((team, index) => (
-                <li key={index} className="history-item">{team}</li>
+                <li key={index} className="history-item">
+                  {team}
+                </li>
               ))
             ) : (
               <p className="no-fixtures">No teams found.</p>
             )}
           </ul>
         )}
-      
+
         <footer className="footer">
-
-        © {new Date().getFullYear()} BetWise. All rights reserved.
-      </footer>
+          © {new Date().getFullYear()} BetWise. All rights reserved.
+        </footer>
       </section>
-
-       
     </main>
   );
 };

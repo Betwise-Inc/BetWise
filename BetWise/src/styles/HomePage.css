@@ -57,6 +57,56 @@ body,html {
   justify-content: center;
   gap: 16px;
 }
+.league-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between league button and 3 dots */
+}.dots-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-left: 8px;
+}
+
+.dots-button {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #1C4D78;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.dots-button:hover {
+  background-color: rgba(28, 77, 120, 0.1);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  min-width: 120px;
+  z-index: 1000;
+  list-style: none;
+  margin: 0;
+}
+
+.dropdown-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #1C4D78;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #e0f2fe;
+}
+
 
 .league-button {
   display: flex;
@@ -81,6 +131,65 @@ body,html {
   background-color: white;
   color: #1e293b;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.add-competition-container {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  max-width: 900px; /* same as league buttons max width */
+  margin-left: auto;
+  margin-right: auto;
+}
+.add-competition-button {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  background-color: #1C4D78;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 200px;
+  cursor: pointer;
+}
+
+.add-competition-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.03);
+  color: #1C4D78;
+}.add-competition-form {
+  margin: 1rem auto; /* This centers the form horizontally */
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  gap: 0.75rem;
+}
+
+
+.add-competition-form input {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.submit-button {
+  padding: 0.5rem;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
 }
 
 .league-logo {
