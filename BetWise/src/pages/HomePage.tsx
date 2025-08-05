@@ -6,35 +6,23 @@ import {
   getCompetitions,
   AddCompetition,
   deleteCompetitionById,
+  updateCompetitionRound,
 } from "../APIconfigs/Competitions";
+import { fetchFixtures } from "../APIconfigs/fixtures";
+import type { Fixture } from "../APIconfigs/fixtures";
+
 import { auth } from "../../firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { getUserByEmail } from "../APIconfigs/Users";
 //Competitions db,id = competition name from livescore API
 //Admins can add competitions
 type Competition = {
-  _id: number; // Or `string` if you're using string IDs
+  _id: number;
   name: string;
   country: string;
   logo: string;
+  round: string;
 };
-
-const dummySerieA = [
-  "Juventus VS Napoli",
-  "Inter Milan VS AC Milan",
-  "Lazio VS ROMA",
-];
-const dummyPremierLeague = [
-  "Arsenal VS Chelsea",
-  "Liverpool VS Tottenham",
-  "Man Utd VS Man City",
-];
-const dummyLaliga = ["Real Madrid VS Barcelona", "Sevilla VS Atletico Madrid"];
-const dummyBundesliga = [
-  "Bayern Munich VS Dortmund",
-  "Frankfurt VS Bayer Leverkusen",
-];
-const dummyLigue1 = ["PSG VS Nantes"];
 
 const dummyTeams = [
   "Arsenal",
@@ -54,23 +42,6 @@ const dummyTeams = [
   "Dortmund",
 ];
 
-const getFixtures = (leagueId: string): string[] => {
-  switch (leagueId) {
-    case "2":
-      return dummyPremierLeague;
-    case "3":
-      return dummyLaliga;
-    case "4":
-      return dummySerieA;
-    case "1":
-      return dummyBundesliga;
-    case "5":
-      return dummyLigue1;
-    default:
-      return [];
-  }
-};
-
 const HomePage = (): JSX.Element => {
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
 
@@ -79,18 +50,26 @@ const HomePage = (): JSX.Element => {
   const [searchQuery, setSearchQuery] = useState("");
   const [competitions, setCompetitions] = useState<Competition[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showRoundPopup, setShowRoundPopup] = useState(false);
+  const [roundInput, setRoundInput] = useState("");
+  const [activeLeague, setActiveLeague] = useState<Competition | null>(null);
+  const [rounds, setRounds] = useState<{ [id: number]: string }>({});
+  const [apiFixtures, setApiFixtures] = useState<Fixture[]>([]);
+  const [loadingFixtures, setLoadingFixtures] = useState(false);
+
   const [newCompetition, setNewCompetition] = useState({
     _id: 0,
     name: "",
     country: "",
     logo: "",
+    round: "",
   });
 
   const [user, setUser] = useState<{
     email: string | null;
     isAdmin: boolean;
   } | null>(null);
-  const fixtures = getFixtures(selectedLeague);
+  const userInitial = user?.email ? user.email.charAt(0).toUpperCase() : "?";
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -126,6 +105,32 @@ const HomePage = (): JSX.Element => {
 
     fetchCompetitions();
   }, []);
+  useEffect(() => {
+   
+    if (competitions.length > 0 && selectedLeague === "2") {
+      const fetchInitialFixtures = async () => {
+        const selectedComp = competitions.find(
+          (comp) => comp._id.toString() === "2"
+        );
+        if (!selectedComp) return;
+
+        setLoadingFixtures(true);
+        try {
+          const fetched = await fetchFixtures(
+            selectedComp._id,
+            selectedComp.round || "1"
+          );
+          setApiFixtures(fetched);
+        } catch {
+          setApiFixtures([]);
+        } finally {
+          setLoadingFixtures(false);
+        }
+      };
+
+      fetchInitialFixtures();
+    }
+  }, [competitions, selectedLeague]);
 
   const handleLogoutClick = async () => {
     try {
@@ -139,17 +144,42 @@ const HomePage = (): JSX.Element => {
     team.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleLeagueClick = (leagueId: string) => {
+  const handleLeagueClick = async (leagueId: string) => {
     setSelectedLeague(leagueId);
     fixturesRef.current?.scrollIntoView({ behavior: "smooth" });
+
+    const selectedComp = competitions.find(
+      (comp) => comp._id.toString() === leagueId
+    );
+
+    if (!selectedComp) return;
+
+    const round = selectedComp.round || "1";
+
+    setLoadingFixtures(true);
+    try {
+      const fetched = await fetchFixtures(selectedComp._id, round);
+      setApiFixtures(fetched);
+    } catch (error) {
+      setApiFixtures([]);
+    } finally {
+      setLoadingFixtures(false);
+    }
   };
+
   const handleAddCompetition = async () => {
     try {
-      const { _id, name, country, logo } = newCompetition;
-      await AddCompetition(_id, name, country, logo);
+      const { _id, name, country, logo, round } = newCompetition;
+      await AddCompetition(_id, name, country, logo, round);
 
       setShowAddForm(false);
-      setNewCompetition({ _id: 0, name: "", country: "", logo: "" }); 
+      setNewCompetition({
+        _id: 0,
+        name: "",
+        country: "",
+        logo: "",
+        round: "",
+      });
       const data = await getCompetitions();
       setCompetitions(data);
     } catch (err) {
@@ -161,12 +191,9 @@ const HomePage = (): JSX.Element => {
     <main className="home-page">
       <section className="navbar">
         <section className="navbar-left">
-          <img
-            data-testid="Pic2"
-            src="https://th.bing.com/th/id/R.b15541f5211192e39040dbb75cfdae14?rik=Upya7SBm%2bYjb3w&riu=http%3a%2f%2fwww.freeiconspng.com%2fuploads%2fperson-icon-5.png&ehk=vP6v8y8lw%2brW7%2fJl3ecgKvm7UrO%2fbmZ70TGxNeY40fg%3d&risl=&pid=ImgRaw&r=0"
-            alt="Pic2"
-            className="user-image"
-          />
+          <div className="user-initial-circle" data-testid="UserInitialCircle">
+            {userInitial}
+          </div>
           <a
             target="_blank"
             rel="noopener noreferrer"
@@ -208,7 +235,11 @@ const HomePage = (): JSX.Element => {
                 </section>
 
                 <section className="league-text">
-                  <section className="league-name">{league.name}</section>
+                  <section className="league-name">
+                    {league.name}
+                    {rounds[league._id] && ` (Round ${rounds[league._id]})`}
+                  </section>
+
                   <section className="league-country">{league.country}</section>
                 </section>
               </button>
@@ -237,12 +268,12 @@ const HomePage = (): JSX.Element => {
                           if (confirmDelete) {
                             try {
                               await deleteCompetitionById(league._id);
-                              
+
                               setOpenDropdownId(null);
-                          
+
                               const data = await getCompetitions();
                               setCompetitions(data);
-                             
+
                               if (selectedLeague === league._id.toString()) {
                                 setSelectedLeague("");
                               }
@@ -251,7 +282,6 @@ const HomePage = (): JSX.Element => {
                                 "Error deleting competition:",
                                 error
                               );
-                             
                             }
                           } else {
                             setOpenDropdownId(null);
@@ -263,11 +293,12 @@ const HomePage = (): JSX.Element => {
                       <li
                         className="dropdown-item"
                         onClick={() => {
-                          alert(`Modify ${league.name} (to be implemented)`);
+                          setActiveLeague(league);
+                          setShowRoundPopup(true);
                           setOpenDropdownId(null);
                         }}
                       >
-                        Modify
+                        Set Round
                       </li>
                     </ul>
                   )}
@@ -326,22 +357,30 @@ const HomePage = (): JSX.Element => {
                 setNewCompetition({ ...newCompetition, logo: e.target.value })
               }
             />
+            <input
+              type="text"
+              placeholder="Round (e.g., 1, 5, QF, R16, SF, F)"
+              value={newCompetition.round}
+              onChange={(e) =>
+                setNewCompetition({ ...newCompetition, round: e.target.value })
+              }
+            />
             <button onClick={handleAddCompetition} className="submit-button">
               Submit
             </button>
           </section>
         )}
       </section>
-      <section ref={fixturesRef} className="fixtures section">
+      <section className="fixtures section">
         <h2 className="section-title">Fixtures</h2>
-        <p className="fixtures-subheading">
-          Select the fixture you want predictions for.
-        </p>
-        {fixtures.length > 0 ? (
+        {loadingFixtures ? (
+          <p>Loading fixtures...</p>
+        ) : apiFixtures.length > 0 ? (
           <ul className="fixtures-list">
-            {fixtures.map((match, index) => (
+            {apiFixtures.map((fixture, index) => (
               <li key={index} className="fixture-item">
-                {match}
+                <span>{fixture.home_name}</span> vs{" "}
+                <span>{fixture.away_name}</span>
               </li>
             ))}
           </ul>
@@ -380,6 +419,60 @@ const HomePage = (): JSX.Element => {
           © {new Date().getFullYear()} BetWise. All rights reserved.
         </footer>
       </section>
+      {showRoundPopup && activeLeague && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <button
+              className="close-button"
+              onClick={() => setShowRoundPopup(false)}
+            >
+              ✕
+            </button>
+            <h3>Set Round for {activeLeague.name}</h3>
+            <input
+              type="text"
+              placeholder="Enter round (e.g. 1, 5, QF, R16, SF, F)"
+              value={roundInput}
+              onChange={(e) => setRoundInput(e.target.value)}
+              className="modal-input"
+            />
+            <button
+              className="modal-submit"
+              onClick={async () => {
+                if (!activeLeague) return;
+
+                try {
+                  // Update round in DB
+                  await updateCompetitionRound(activeLeague._id, roundInput);
+
+                  // Update local competitions state
+                  setCompetitions((prev) =>
+                    prev.map((comp) =>
+                      comp._id === activeLeague._id
+                        ? { ...comp, round: roundInput }
+                        : comp
+                    )
+                  );
+
+                  // Update UI round display
+                  setRounds((prev) => ({
+                    ...prev,
+                    [activeLeague._id]: roundInput,
+                  }));
+
+                  // Reset modal state
+                  setShowRoundPopup(false);
+                  setRoundInput("");
+                } catch (error) {
+                  console.error("Error updating round:", error);
+                }
+              }}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 };

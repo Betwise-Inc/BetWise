@@ -7,6 +7,7 @@ export interface Comp {
   name: string;
   country: string;
   logo: string;
+  round: string;
 }
 
 export const getCompetitions = async (): Promise<Comp[]> => {
@@ -23,17 +24,30 @@ export const AddCompetition = async (
   id: number,
   name: string,
   country: string,
-  logo: string
+  logo: string,
+  round: string
 ): Promise<Comp> => {
   const response = await axios.post(API_URL, {
     id,
     name,
     country,
-    logo
+    logo,
+    round,
   });
+
   return response.data;
 };
 
 export const deleteCompetitionById = async (id: number): Promise<void> => {
   await axios.delete(`${API_URL}/${id}`);
+};
+
+export const updateCompetitionRound = async (
+  id: number,
+  round: string
+): Promise<Comp> => {
+  const response = await axios.put(`${API_URL}/${id}/round`, {
+    round,
+  });
+  return response.data;
 };
