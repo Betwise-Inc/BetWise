@@ -135,7 +135,7 @@ const HomePage = (): JSX.Element => {
   const handleLogoutClick = async () => {
     try {
       await auth.signOut();
-      navigate("/Auth");
+      navigate("/");
     } catch (error) {
       console.error("Error signing out: ", error);
     }
