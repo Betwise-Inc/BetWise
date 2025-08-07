@@ -1,6 +1,7 @@
 import type { JSX } from "react";
 import { useEffect } from "react";
 import "../styles/HomePage.css";
+import PredictionPage from "./predictions";
 import { useState, useRef } from "react";
 import {
   getCompetitions,
@@ -14,8 +15,7 @@ import type { Fixture } from "../APIconfigs/fixtures";
 import { auth } from "../../firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { getUserByEmail } from "../APIconfigs/Users";
-//Competitions db,id = competition name from livescore API
-//Admins can add competitions
+import useAutoLogout from "../Hooks/useAutoLogout";
 type Competition = {
   _id: number;
   name: string;
@@ -43,6 +43,7 @@ const dummyTeams = [
 ];
 
 const HomePage = (): JSX.Element => {
+  useAutoLogout();
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
 
   const fixturesRef = useRef<HTMLElement>(null);
@@ -53,9 +54,10 @@ const HomePage = (): JSX.Element => {
   const [showRoundPopup, setShowRoundPopup] = useState(false);
   const [roundInput, setRoundInput] = useState("");
   const [activeLeague, setActiveLeague] = useState<Competition | null>(null);
-  const [rounds, setRounds] = useState<{ [id: number]: string }>({});
   const [apiFixtures, setApiFixtures] = useState<Fixture[]>([]);
   const [loadingFixtures, setLoadingFixtures] = useState(false);
+  const [selectedFixture, setSelectedFixture] = useState<Fixture | null>(null);
+  const [showPredictionPopup, setShowPredictionPopup] = useState(false);
 
   const [newCompetition, setNewCompetition] = useState({
     _id: 0,
@@ -106,7 +108,6 @@ const HomePage = (): JSX.Element => {
     fetchCompetitions();
   }, []);
   useEffect(() => {
-   
     if (competitions.length > 0 && selectedLeague === "2") {
       const fetchInitialFixtures = async () => {
         const selectedComp = competitions.find(
@@ -191,9 +192,15 @@ const HomePage = (): JSX.Element => {
     <main className="home-page">
       <section className="navbar">
         <section className="navbar-left">
-          <div className="user-initial-circle" data-testid="UserInitialCircle">
-            {userInitial}
+          <div className="ring">
+            <div
+              className="user-initial-circle"
+              data-testid="UserInitialCircle"
+            >
+              {userInitial}
+            </div>
           </div>
+
           <a
             target="_blank"
             rel="noopener noreferrer"
@@ -235,10 +242,7 @@ const HomePage = (): JSX.Element => {
                 </section>
 
                 <section className="league-text">
-                  <section className="league-name">
-                    {league.name}
-                    {rounds[league._id] && ` (Round ${rounds[league._id]})`}
-                  </section>
+                  <section className="league-name">{league.name}</section>
 
                   <section className="league-country">{league.country}</section>
                 </section>
@@ -377,8 +381,21 @@ const HomePage = (): JSX.Element => {
           <p>Loading fixtures...</p>
         ) : apiFixtures.length > 0 ? (
           <ul className="fixtures-list">
-            {apiFixtures.map((fixture, index) => (
+            {/* {apiFixtures.map((fixture, index) => (
               <li key={index} className="fixture-item">
+                <span>{fixture.home_name}</span> vs{" "}
+                <span>{fixture.away_name}</span>
+              </li>
+            ))} */}
+            {apiFixtures.map((fixture, index) => (
+              <li
+                key={index}
+                className="fixture-item"
+                onClick={() => {
+                  setSelectedFixture(fixture);
+                  setShowPredictionPopup(true);
+                }}
+              >
                 <span>{fixture.home_name}</span> vs{" "}
                 <span>{fixture.away_name}</span>
               </li>
@@ -420,8 +437,8 @@ const HomePage = (): JSX.Element => {
         </footer>
       </section>
       {showRoundPopup && activeLeague && (
-        <div className="modal-overlay">
-          <div className="modal">
+        <section className="modal-overlay">
+          <section className="modal">
             <button
               className="close-button"
               onClick={() => setShowRoundPopup(false)}
@@ -442,10 +459,7 @@ const HomePage = (): JSX.Element => {
                 if (!activeLeague) return;
 
                 try {
-                  // Update round in DB
                   await updateCompetitionRound(activeLeague._id, roundInput);
-
-                  // Update local competitions state
                   setCompetitions((prev) =>
                     prev.map((comp) =>
                       comp._id === activeLeague._id
@@ -453,14 +467,6 @@ const HomePage = (): JSX.Element => {
                         : comp
                     )
                   );
-
-                  // Update UI round display
-                  setRounds((prev) => ({
-                    ...prev,
-                    [activeLeague._id]: roundInput,
-                  }));
-
-                  // Reset modal state
                   setShowRoundPopup(false);
                   setRoundInput("");
                 } catch (error) {
@@ -470,8 +476,17 @@ const HomePage = (): JSX.Element => {
             >
               Submit
             </button>
-          </div>
-        </div>
+          </section>
+        </section>
+      )}
+      {showPredictionPopup && selectedFixture && (
+        <PredictionPage
+          fixture={selectedFixture}
+          onClose={() => {
+            setShowPredictionPopup(false);
+            setSelectedFixture(null);
+          }}
+        />
       )}
     </main>
   );
