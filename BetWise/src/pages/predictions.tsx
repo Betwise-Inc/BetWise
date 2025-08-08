@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../styles/PredictionPage.css";
-
+import ResultBar from "./result";
 type Props = {
   fixture: {
     home_name: string;
@@ -39,13 +39,14 @@ const PredictionPage: React.FC<Props> = ({ fixture, onClose }) => {
         <div className="tab-content">
           {activeTab === "insights" && (
             <section className="prediction-section">
+
               <p className="prediction-text">
                 {fixture.home_name} vs {fixture.away_name}
               </p>
-              <h2 className="prediction-title">Numerical Insights</h2>
-              <p className="prediction-text">
-                Here you can find various statistics and predictions based on the latest data.
-              </p>
+              <p className="Home-outcome">{fixture.home_name}:<ResultBar Win={40} Draw={20} Loss={40} /></p>
+              <p className="Away-outcome">{fixture.away_name}:<ResultBar Win={30} Draw={35} Loss={15} /></p>
+              <p className="goals-overall">Goals Overall :Over 2.5</p>
+              <p className="BTS">Both Teams to Score:Yes</p>
             </section>
           )}
 

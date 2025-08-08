@@ -170,7 +170,12 @@ body,html {
   max-width: 400px;
   gap: 0.75rem;
 }
-
+.loading {
+  font-size: 1.5rem;
+  color: #1C4D78;
+  text-align: center;
+  
+}
 
 .add-competition-form input {
   padding: 0.5rem;

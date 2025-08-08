@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import "../styles/HomePage.css";
 import PredictionPage from "./predictions";
 import { useState, useRef } from "react";
+import { useUser } from "../Hooks/UserContext";
 import {
   getCompetitions,
   AddCompetition,
@@ -14,7 +15,7 @@ import type { Fixture } from "../APIconfigs/fixtures";
 
 import { auth } from "../../firebaseConfig";
 import { useNavigate } from "react-router-dom";
-import { getUserByEmail } from "../APIconfigs/Users";
+
 import useAutoLogout from "../Hooks/useAutoLogout";
 type Competition = {
   _id: number;
@@ -58,6 +59,7 @@ const HomePage = (): JSX.Element => {
   const [loadingFixtures, setLoadingFixtures] = useState(false);
   const [selectedFixture, setSelectedFixture] = useState<Fixture | null>(null);
   const [showPredictionPopup, setShowPredictionPopup] = useState(false);
+  // const [isUserLoading, setIsUserLoading] = useState(true);
 
   const [newCompetition, setNewCompetition] = useState({
     _id: 0,
@@ -67,34 +69,39 @@ const HomePage = (): JSX.Element => {
     round: "",
   });
 
-  const [user, setUser] = useState<{
-    email: string | null;
-    isAdmin: boolean;
-  } | null>(null);
-  const userInitial = user?.email ? user.email.charAt(0).toUpperCase() : "?";
+  // const [user, setUser] = useState<{
+  //   email: string | null;
+  //   isAdmin: boolean;
+  // } | null>(null);
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
-      if (firebaseUser) {
-        const email = firebaseUser.email;
-        if (email) {
-          try {
-            const userData = await getUserByEmail(email);
-            setUser({ email, isAdmin: userData?.isAdmin || false });
-          } catch {
-            setUser({ email, isAdmin: false });
-          }
-        } else {
-          setUser({ email: null, isAdmin: false });
-        }
-      } else {
-        setUser(null);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
+  //     if (firebaseUser) {
+  //       const email = firebaseUser.email;
+  //       if (email) {
+  //         try {
+  //           const userData = await getUserByEmail(email);
+  //           setUser({ email, isAdmin: userData?.isAdmin || false });
+  //         } catch {
+  //           setUser({ email, isAdmin: false });
+  //         }
+  //       } else {
+  //         setUser({ email: null, isAdmin: false });
+  //       }
+  //     } else {
+  //       setUser(null);
+  //     }
 
+  //     setIsUserLoading(false);
+  //   });
+
+  //   return () => unsubscribe();
+  // }, []);
+  const { user, loading: isUserLoading } = useUser();
+
+  const userInitial = user?.email ? user.email.charAt(0).toUpperCase() : "?";
   useEffect(() => {
     const fetchCompetitions = async () => {
       try {
@@ -187,18 +194,18 @@ const HomePage = (): JSX.Element => {
       console.error("Error adding competition:", err);
     }
   };
-
+  
   return (
     <main className="home-page">
+     {isUserLoading ? (
+      <div className="loading-screen">Loading user...</div>
+      ) : (
+      
+      <>
       <section className="navbar">
         <section className="navbar-left">
-          <div className="ring">
-            <div
-              className="user-initial-circle"
-              data-testid="UserInitialCircle"
-            >
-              {userInitial}
-            </div>
+          <div className="user-initial-circle" data-testid="UserInitialCircle">
+            {userInitial}
           </div>
 
           <a
@@ -436,6 +443,8 @@ const HomePage = (): JSX.Element => {
           © {new Date().getFullYear()} BetWise. All rights reserved.
         </footer>
       </section>
+      </>
+      )}
       {showRoundPopup && activeLeague && (
         <section className="modal-overlay">
           <section className="modal">
@@ -488,6 +497,7 @@ const HomePage = (): JSX.Element => {
           }}
         />
       )}
+      
     </main>
   );
 };

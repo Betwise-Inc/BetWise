@@ -1,0 +1,52 @@
+.result-bar {
+    width: 100%;
+    min-width: 400px;  
+    max-width: 800px; 
+    margin: 0 auto;    
+}
+
+.result-bar-container {
+    display: flex;
+    height: 15px;       
+    border-radius: 4px;
+    overflow: hidden;
+    background: #ddd;
+}
+
+.result-segment {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    white-space: nowrap;
+    transition: width 1.2s ease-in-out;
+}
+
+.result-segment.win {
+    background-color: #4caf50;
+}
+
+.result-segment.loss {
+    background-color: #f44336;
+}
+
+.result-segment.draw {
+    background-color: #1e00ff;
+    color: white; 
+}
+
+.result-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+
+.percent-label {
+    pointer-events: none; 
+}
