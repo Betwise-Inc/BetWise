@@ -4,6 +4,8 @@ import "../styles/HomePage.css";
 import PredictionPage from "./predictions";
 import { useState, useRef } from "react";
 import { useUser } from "../Hooks/UserContext";
+import LoadingDots from "./loading";
+import NavBar from "./Navbar";
 import {
   getCompetitions,
   AddCompetition,
@@ -12,9 +14,6 @@ import {
 } from "../APIconfigs/Competitions";
 import { fetchFixtures } from "../APIconfigs/fixtures";
 import type { Fixture } from "../APIconfigs/fixtures";
-
-import { auth } from "../../firebaseConfig";
-import { useNavigate } from "react-router-dom";
 
 import useAutoLogout from "../Hooks/useAutoLogout";
 type Competition = {
@@ -74,7 +73,7 @@ const HomePage = (): JSX.Element => {
   //   isAdmin: boolean;
   // } | null>(null);
 
-  const navigate = useNavigate();
+  
 
   // useEffect(() => {
   //   const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
@@ -100,8 +99,6 @@ const HomePage = (): JSX.Element => {
   //   return () => unsubscribe();
   // }, []);
   const { user, loading: isUserLoading } = useUser();
-
-  const userInitial = user?.email ? user.email.charAt(0).toUpperCase() : "?";
   useEffect(() => {
     const fetchCompetitions = async () => {
       try {
@@ -140,14 +137,7 @@ const HomePage = (): JSX.Element => {
     }
   }, [competitions, selectedLeague]);
 
-  const handleLogoutClick = async () => {
-    try {
-      await auth.signOut();
-      navigate("/");
-    } catch (error) {
-      console.error("Error signing out: ", error);
-    }
-  };
+  
   const filteredTeams = dummyTeams.filter((team) =>
     team.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -194,257 +184,249 @@ const HomePage = (): JSX.Element => {
       console.error("Error adding competition:", err);
     }
   };
-  
+  if (isUserLoading)
+    return (
+      <section className="loading">
+        <LoadingDots numDots={10} radius={60} speed={0.8} size={10} />
+      </section>
+    );
   return (
     <main className="home-page">
-     {isUserLoading ? (
-      <div className="loading-screen">Loading user...</div>
-      ) : (
-      
       <>
-      <section className="navbar">
-        <section className="navbar-left">
-          <div className="user-initial-circle" data-testid="UserInitialCircle">
-            {userInitial}
-          </div>
-
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            className="navbar-username"
-          >
-            {user?.email}
-          </a>
+        <NavBar />
+        <section className="heading-section">
+          <h1 className="title">
+            Welcome to <span className="highlight">BetWise</span>
+          </h1>
+          <p className="subtitle">BETTiNG MADE SiMPLE.</p>
         </section>
-        <section className="navbar-right">
-          <button onClick={handleLogoutClick} className="logout">
-            Logout
-          </button>
-        </section>
-      </section>
-      <section className="heading-section">
-        <h1 className="title">
-          Welcome to <span className="highlight">BetWise</span>
-        </h1>
-        <p className="subtitle">BETTiNG MADE SiMPLE.</p>
-      </section>
-      <section className="league-section">
-        <h2 className="section-title">Select Your League</h2>
-        <section className="league-buttons">
-          {competitions.map((league) => (
-            <section className="league-wrapper" key={league._id.toString()}>
-              <button
-                onClick={() => handleLeagueClick(league._id.toString())}
-                className={`league-button ${
-                  selectedLeague === league._id.toString() ? "selected" : ""
-                }`}
-              >
-                <section className="league-logo">
-                  <img
-                    src={league.logo}
-                    alt={`${league.name} logo`}
-                    width={20}
-                    height={20}
-                  />
-                </section>
+        <section className="league-section" id="competitions">
+          <h2 className="section-title">Select Your League</h2>
+          <section className="league-buttons">
+            {competitions.map((league) => (
+              <section className="league-wrapper" key={league._id.toString()}>
+                <button
+                  onClick={() => handleLeagueClick(league._id.toString())}
+                  className={`league-button ${
+                    selectedLeague === league._id.toString() ? "selected" : ""
+                  }`}
+                >
+                  <section className="league-logo">
+                    <img
+                      src={league.logo}
+                      alt={`${league.name} logo`}
+                      width={20}
+                      height={20}
+                    />
+                  </section>
 
-                <section className="league-text">
-                  <section className="league-name">{league.name}</section>
+                  <section className="league-text">
+                    <section className="league-name">{league.name}</section>
 
-                  <section className="league-country">{league.country}</section>
-                </section>
-              </button>
+                    <section className="league-country">
+                      {league.country}
+                    </section>
+                  </section>
+                </button>
 
-              {user?.isAdmin && (
-                <div className="dots-wrapper">
-                  <button
-                    className="dots-button"
-                    aria-label="More options"
-                    onClick={() =>
-                      setOpenDropdownId(
-                        openDropdownId === league._id ? null : league._id
-                      )
-                    }
-                  >
-                    ⋮
-                  </button>
-                  {openDropdownId === league._id && (
-                    <ul className="dropdown-menu">
-                      <li
-                        className="dropdown-item"
-                        onClick={async () => {
-                          const confirmDelete = window.confirm(
-                            `Are you sure you want to delete ${league.name}?`
-                          );
-                          if (confirmDelete) {
-                            try {
-                              await deleteCompetitionById(league._id);
+                {user?.isAdmin && (
+                  <div className="dots-wrapper">
+                    <button
+                      className="dots-button"
+                      aria-label="More options"
+                      onClick={() =>
+                        setOpenDropdownId(
+                          openDropdownId === league._id ? null : league._id
+                        )
+                      }
+                    >
+                      ⋮
+                    </button>
+                    {openDropdownId === league._id && (
+                      <ul className="dropdown-menu">
+                        <li
+                          className="dropdown-item"
+                          onClick={async () => {
+                            const confirmDelete = window.confirm(
+                              `Are you sure you want to delete ${league.name}?`
+                            );
+                            if (confirmDelete) {
+                              try {
+                                await deleteCompetitionById(league._id);
 
-                              setOpenDropdownId(null);
+                                setOpenDropdownId(null);
 
-                              const data = await getCompetitions();
-                              setCompetitions(data);
+                                const data = await getCompetitions();
+                                setCompetitions(data);
 
-                              if (selectedLeague === league._id.toString()) {
-                                setSelectedLeague("");
+                                if (selectedLeague === league._id.toString()) {
+                                  setSelectedLeague("");
+                                }
+                              } catch (error) {
+                                console.error(
+                                  "Error deleting competition:",
+                                  error
+                                );
                               }
-                            } catch (error) {
-                              console.error(
-                                "Error deleting competition:",
-                                error
-                              );
+                            } else {
+                              setOpenDropdownId(null);
                             }
-                          } else {
+                          }}
+                        >
+                          Delete
+                        </li>
+                        <li
+                          className="dropdown-item"
+                          onClick={() => {
+                            setActiveLeague(league);
+                            setShowRoundPopup(true);
                             setOpenDropdownId(null);
-                          }
-                        }}
-                      >
-                        Delete
-                      </li>
-                      <li
-                        className="dropdown-item"
-                        onClick={() => {
-                          setActiveLeague(league);
-                          setShowRoundPopup(true);
-                          setOpenDropdownId(null);
-                        }}
-                      >
-                        Set Round
-                      </li>
-                    </ul>
-                  )}
-                </div>
-              )}
+                          }}
+                        >
+                          Set Round
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+              </section>
+            ))}
+          </section>
+          {user?.isAdmin && (
+            <section className="add-competition-container">
+              <button
+                className="add-competition-button"
+                onClick={() => setShowAddForm(!showAddForm)}
+              >
+                {showAddForm ? "Cancel" : "+ Add Competition"}
+              </button>
             </section>
-          ))}
+          )}
+          {showAddForm && (
+            <section className="add-competition-form">
+              <input
+                type="number"
+                placeholder="ID"
+                value={newCompetition._id}
+                onChange={(e) =>
+                  setNewCompetition({
+                    ...newCompetition,
+                    _id: Number(e.target.value),
+                  })
+                }
+              />
+              <input
+                type="text"
+                placeholder="League Name"
+                value={newCompetition.name}
+                onChange={(e) =>
+                  setNewCompetition({
+                    ...newCompetition,
+                    name: e.target.value,
+                  })
+                }
+              />
+              <input
+                type="text"
+                placeholder="Country"
+                value={newCompetition.country}
+                onChange={(e) =>
+                  setNewCompetition({
+                    ...newCompetition,
+                    country: e.target.value,
+                  })
+                }
+              />
+              <input
+                type="text"
+                placeholder="Logo URL (e.g., /assets/laliga_logo.svg)"
+                value={newCompetition.logo}
+                onChange={(e) =>
+                  setNewCompetition({
+                    ...newCompetition,
+                    logo: e.target.value,
+                  })
+                }
+              />
+              <input
+                type="text"
+                placeholder="Round (e.g., 1, 5, QF, R16, SF, F)"
+                value={newCompetition.round}
+                onChange={(e) =>
+                  setNewCompetition({
+                    ...newCompetition,
+                    round: e.target.value,
+                  })
+                }
+              />
+              <button onClick={handleAddCompetition} className="submit-button">
+                Submit
+              </button>
+            </section>
+          )}
         </section>
-        {user?.isAdmin && (
-          <section className="add-competition-container">
-            <button
-              className="add-competition-button"
-              onClick={() => setShowAddForm(!showAddForm)}
-            >
-              {showAddForm ? "Cancel" : "+ Add Competition"}
-            </button>
-          </section>
-        )}
-        {showAddForm && (
-          <section className="add-competition-form">
-            <input
-              type="number"
-              placeholder="ID"
-              value={newCompetition._id}
-              onChange={(e) =>
-                setNewCompetition({
-                  ...newCompetition,
-                  _id: Number(e.target.value),
-                })
-              }
-            />
-            <input
-              type="text"
-              placeholder="League Name"
-              value={newCompetition.name}
-              onChange={(e) =>
-                setNewCompetition({ ...newCompetition, name: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Country"
-              value={newCompetition.country}
-              onChange={(e) =>
-                setNewCompetition({
-                  ...newCompetition,
-                  country: e.target.value,
-                })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Logo URL (e.g., /assets/laliga_logo.svg)"
-              value={newCompetition.logo}
-              onChange={(e) =>
-                setNewCompetition({ ...newCompetition, logo: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Round (e.g., 1, 5, QF, R16, SF, F)"
-              value={newCompetition.round}
-              onChange={(e) =>
-                setNewCompetition({ ...newCompetition, round: e.target.value })
-              }
-            />
-            <button onClick={handleAddCompetition} className="submit-button">
-              Submit
-            </button>
-          </section>
-        )}
-      </section>
-      <section className="fixtures section">
-        <h2 className="section-title">Fixtures</h2>
-        {loadingFixtures ? (
-          <p>Loading fixtures...</p>
-        ) : apiFixtures.length > 0 ? (
-          <ul className="fixtures-list">
-            {/* {apiFixtures.map((fixture, index) => (
+        <section className="fixtures section" id="fixtures">
+          <h2 className="section-title">Fixtures</h2>
+          {loadingFixtures ? (
+            <p>Loading fixtures...</p>
+          ) : apiFixtures.length > 0 ? (
+            <ul className="fixtures-list">
+              {/* {apiFixtures.map((fixture, index) => (
               <li key={index} className="fixture-item">
                 <span>{fixture.home_name}</span> vs{" "}
                 <span>{fixture.away_name}</span>
               </li>
             ))} */}
-            {apiFixtures.map((fixture, index) => (
-              <li
-                key={index}
-                className="fixture-item"
-                onClick={() => {
-                  setSelectedFixture(fixture);
-                  setShowPredictionPopup(true);
-                }}
-              >
-                <span>{fixture.home_name}</span> vs{" "}
-                <span>{fixture.away_name}</span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="no-fixtures">No fixtures available.</p>
-        )}
-      </section>
-
-      <section className="history section">
-        <h2 className="section-title">Prediction History</h2>
-        <p className="history-subheading">View previous predictions.</p>
-        <section className="search-bar">
-          <input
-            type="text"
-            placeholder="Search team"
-            className="history-search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </section>
-        {searchQuery.trim() !== "" && (
-          <ul className="history-list">
-            {filteredTeams.length > 0 ? (
-              filteredTeams.map((team, index) => (
-                <li key={index} className="history-item">
-                  {team}
+              {apiFixtures.map((fixture, index) => (
+                <li
+                  key={index}
+                  className="fixture-item"
+                  onClick={() => {
+                    setSelectedFixture(fixture);
+                    setShowPredictionPopup(true);
+                  }}
+                >
+                  <span>{fixture.home_name}</span> vs{" "}
+                  <span>{fixture.away_name}</span>
                 </li>
-              ))
-            ) : (
-              <p className="no-fixtures">No teams found.</p>
-            )}
-          </ul>
-        )}
+              ))}
+            </ul>
+          ) : (
+            <p className="no-fixtures">No fixtures available.</p>
+          )}
+        </section>
 
-        <footer className="footer">
-          © {new Date().getFullYear()} BetWise. All rights reserved.
-        </footer>
-      </section>
+        <section className="history section" id="history">
+          <h2 className="section-title">Prediction History</h2>
+          <p className="history-subheading">View previous predictions.</p>
+          <section className="search-bar">
+            <input
+              type="text"
+              placeholder="Search team"
+              className="history-search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </section>
+          {searchQuery.trim() !== "" && (
+            <ul className="history-list">
+              {filteredTeams.length > 0 ? (
+                filteredTeams.map((team, index) => (
+                  <li key={index} className="history-item">
+                    {team}
+                  </li>
+                ))
+              ) : (
+                <p className="no-fixtures">No teams found.</p>
+              )}
+            </ul>
+          )}
+
+          <footer className="footer">
+            © {new Date().getFullYear()} BetWise. All rights reserved.
+          </footer>
+        </section>
       </>
-      )}
       {showRoundPopup && activeLeague && (
         <section className="modal-overlay">
           <section className="modal">
@@ -497,7 +479,6 @@ const HomePage = (): JSX.Element => {
           }}
         />
       )}
-      
     </main>
   );
 };

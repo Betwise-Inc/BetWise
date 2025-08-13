@@ -303,7 +303,12 @@ body,html {
   align-items: center;
   z-index: 2000;
 }
-
+.loading{
+  position: fixed;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+}
 .modal {
   background-color: #ffffff;
   padding: 2rem;

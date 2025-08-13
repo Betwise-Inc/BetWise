@@ -1,4 +1,4 @@
-/* Base (Mobile First) */
+
 .navbar {
   top: 0;
   left: 0;
@@ -13,97 +13,114 @@
 }
 
 .navbar-left {
-  display: flex;
-  align-items: center;
+  flex: 1;
 }
 
-.navbar-username {
-  font-size: 80%;
-  font-family: sans-serif;
-  font-weight: 200%;
-  margin-left: 1%;
+.navbar-links {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex: 1;
+}
+
+.navbar-links a {
   color: #1C4D78;
   text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
-.navbar-username:hover {
-  text-decoration: underline;
-}
-.navbar-right{
-    margin-right:5%;
-    margin-top: -5%;
-}
-.logout{
-    background-color: #1C4D78;
-    padding: 0.50rem 1.0rem;
-    margin-top: 2rem;
-    border-radius: 10px;
-    z-index: 10;
-    transition: background-color 0.2s ease;
-}
-.logout:hover{
-    background-color: #163c5e;
-}
-.logout:active{
-    background-color: #0f2d45;
+.navbar-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end; /* align right */
+  align-items: center;
 }
 .user-initial-circle {
-  width: 33px;
-  height: 28px;
-  background-color: #1C4D78;
-  color: white;
-  border-radius: 50%;
-  font-weight: 700;
-  font-size: 1.3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
-  cursor: default;
-  margin-right: 5px;
-  font-family: 'Segoe UI', sans-serif;
-  box-shadow: 0 2px 6px rgba(28, 77, 120, 0.4);
+    width: 33px;
+    height: 28px;
+    background-color: #1C4D78;
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    cursor: default;
+    
+  }
+.navbar-username {
+  color:#1C4D78;
+  font-size: 0.7rem;
 }
+.logout{
+  background-color: white;
+  color: #1C4D78;
+  border: 1px #1C4D78;
+}
+.logout:hover {
+  background-color: #1c4d7849;
+}     
+.user-initial-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Base hidden dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-5px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  min-width: 150px;
+  z-index: 100;
+}
+
+/* Show dropdown on hover or when active */
+.user-initial-wrapper:hover .profile-dropdown,
+.profile-dropdown.dropdown-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
 
 /* Tablet (min-width: 600px) */
 @media (min-width: 600px) {
 
 
-  .navbar-username {
-  font-size: 130%;
-  font-family: sans-serif;
-  font-weight: 200%;
-  margin-left: 1%;
-  color: #1C4D78;
-  text-decoration: none;
-}
-  .navbar-right{
-        margin-right:5%;
-        margin-top: -3%;
-    }
-    .logout{
-        background-color: #1C4D78;
-        padding: 0.75rem 1.8rem;
-        margin-top: 2rem;
-        border-radius: 10px;
-        z-index: 10;
-        transition: background-color 0.2s ease;
-    }
-
-.ring{
-  position: relative;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #38bff82e;
+ .navbar-right {
+  flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  box-shadow: 0 2px 6px rgba(28, 77, 120, 0.4);
+  margin-right: 5%;
+}
+  .navbar-links {
+  display: flex;
+  gap: 80px;
+  justify-content: center;
+  flex: 1;
+}
+.navbar-username {
+  color:#1C4D78;
+  font-size: 1rem;
 }
   .user-initial-circle {
     width: 60px;
-    height: 50px;
+    height: 55px;
     background-color: #1C4D78;
     color: white;
     border-radius: 50%;
@@ -123,38 +140,26 @@
   .navbar {
     height: 10%;
   }
-
-  .navbar-username {
-    font-size: 100%;
-    margin-left: 2%;
-  }
-   .navbar-right{
-        margin-right:5%;
-        margin-top: -3%;
-    }
-    .logout{
-        background-color: #1C4D78;
-        padding: 0.75rem 1.8rem;
-        margin-top: 2rem;
-        border-radius: 10px;
-        z-index: 10;
-        transition: background-color 0.2s ease;
-    }
-    
-  .ring{
-  position: relative;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #38bff82e;
+  .navbar-right {
+  flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  box-shadow: 0 2px 6px rgba(28, 77, 120, 0.4);
-  }
+  margin-right: 7%;
+}
+  .navbar-links {
+  display: flex;
+  gap: 100px;
+  justify-content: center;
+  flex: 1;
+}
+.navbar-username {
+  color:#1C4D78;
+  font-size: 1rem;
+}
   .user-initial-circle {
   width: 50px;
-  height: 40px;
+  height: 45px;
   background-color: #1C4D78;
   color: white;
   border-radius: 50%;
