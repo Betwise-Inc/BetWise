@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Set your API base URL
-const API_URL = "https://backwise-end-2.onrender.com/api/competitions";
+const API_URL = import.meta.env.VITE_COMPETITIONS;
 export interface Comp {
   _id: number;
   name: string;

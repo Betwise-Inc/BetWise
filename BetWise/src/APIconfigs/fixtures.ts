@@ -14,7 +14,7 @@ interface FixtureResponse {
 }
 
 
-const BASE_URL = "https://backwise-end-2.onrender.com/api/fixtures";
+const BASE_URL = import.meta.env.VITE_FIXTURES;
 
 export const fetchFixtures = async (
   competitionId: number,

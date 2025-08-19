@@ -31,10 +31,10 @@ const LoadingDots: React.FC<LoadingDotsProps> = ({
           const x = radius * Math.cos(angle);
           const y = radius * Math.sin(angle);
 
-          // Opacity fade effect
+         
           const normalizedAngle = (angle % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
-          const fadeFactor = (Math.cos(normalizedAngle) + 1) / 2; // range 0 → 1
-          const opacity = 0.3 + fadeFactor * 0.7; // range 0.3 → 1
+          const fadeFactor = (Math.cos(normalizedAngle) + 1) / 2; 
+          const opacity = 0.3 + fadeFactor * 0.7; 
 
           dot.style.transform = `translate(${x}px, ${y}px)`;
           dot.style.opacity = opacity.toString();
@@ -73,7 +73,7 @@ const LoadingDots: React.FC<LoadingDotsProps> = ({
         BetWise
       </section>
 
-      {/* Orbiting dots */}
+      
       {Array.from({ length: numDots }).map((_, i) => (
         <div
           key={i}

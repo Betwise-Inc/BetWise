@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Set your API base URL
-const API_URL = "https://backwise-end-2.onrender.com/api/users";
+const API_URL = import.meta.env.VITE_USERS;
 
 // User Type
 export type User = {

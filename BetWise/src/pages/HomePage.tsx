@@ -73,8 +73,6 @@ const HomePage = (): JSX.Element => {
   //   isAdmin: boolean;
   // } | null>(null);
 
-  
-
   // useEffect(() => {
   //   const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
   //     if (firebaseUser) {
@@ -137,7 +135,6 @@ const HomePage = (): JSX.Element => {
     }
   }, [competitions, selectedLeague]);
 
-  
   const filteredTeams = dummyTeams.filter((team) =>
     team.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -258,7 +255,7 @@ const HomePage = (): JSX.Element => {
 
                                 const data = await getCompetitions();
                                 setCompetitions(data);
-
+                                
                                 if (selectedLeague === league._id.toString()) {
                                   setSelectedLeague("");
                                 }
