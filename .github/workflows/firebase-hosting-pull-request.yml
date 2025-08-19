@@ -13,8 +13,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies and build
-        run: cd ./BetWise && npm ci && npm run build
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: cd ./BetWise && npm ci
+        
+      - name: Build project
+        run: cd ./BetWise && npm run build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
@@ -25,6 +34,7 @@ jobs:
           VITE_COMPETITIONS: ${{ secrets.VITE_COMPETITIONS }}
           VITE_FIXTURES: ${{ secrets.VITE_FIXTURES }}
           VITE_USERS: ${{ secrets.VITE_USERS }}
+          
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

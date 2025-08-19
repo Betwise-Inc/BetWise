@@ -10,6 +10,19 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+// Debug: Check if config values are loaded
+console.log('Firebase Config Check:', {
+  apiKey: !!firebaseConfig.apiKey,
+  authDomain: !!firebaseConfig.authDomain,
+  projectId: !!firebaseConfig.projectId,
+});
+
+// Only initialize if we have the required config
+if (!firebaseConfig.apiKey) {
+  console.error('Firebase configuration is missing. Check environment variables.');
+  throw new Error('Firebase configuration is incomplete');
+}
+
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const provider = new GoogleAuthProvider(); // Add provider export
+export const provider = new GoogleAuthProvider();
