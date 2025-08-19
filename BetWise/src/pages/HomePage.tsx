@@ -15,7 +15,6 @@ import {
 import { fetchFixtures } from "../APIconfigs/fixtures";
 import type { Fixture } from "../APIconfigs/fixtures";
 
-import useAutoLogout from "../Hooks/useAutoLogout";
 type Competition = {
   _id: number;
   name: string;
@@ -43,7 +42,7 @@ const dummyTeams = [
 ];
 
 const HomePage = (): JSX.Element => {
-  useAutoLogout();
+
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
 
   const fixturesRef = useRef<HTMLElement>(null);
