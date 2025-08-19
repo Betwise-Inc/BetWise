@@ -14,7 +14,7 @@ interface FixtureResponse {
 }
 
 
-const BASE_URL = import.meta.env.VITE_FIXTURES;
+const BASE_URL = import.meta.env.VITE_API_URL + "/fixtures";
 
 export const fetchFixtures = async (
   competitionId: number,

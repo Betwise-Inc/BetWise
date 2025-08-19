@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Set your API base URL
-const API_URL = import.meta.env.VITE_USERS;
+const API_URL = import.meta.env.VITE_API_URL + "/users";
 
 // User Type
 export type User = {
