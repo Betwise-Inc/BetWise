@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LangingPage";
 import HomePage from "./pages/HomePage";
 import Auth from "./pages/Auth";
-import InsightsPage from "./pages/insights";
+import InsightsPage from "./pages/View";
 import BetSlip from "./pages/Betslip";
 import { UserProvider } from "./Hooks/UserContext";
 import "./App.css";
