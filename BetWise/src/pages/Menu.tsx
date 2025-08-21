@@ -3,6 +3,7 @@ import { auth } from "../../firebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../Hooks/UserContext";
 import "../styles/Menu.css"; 
+
 interface MenuProps {
   isOpen: boolean;
   onClose: () => void;
@@ -16,9 +17,15 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose }) => {
     try {
       await auth.signOut();
       navigate("/");
+      onClose(); // Close menu after logout
     } catch (error) {
       console.error("Error signing out: ", error);
     }
+  };
+
+  const handleNavigationClick = (path: string) => {
+    navigate(path);
+    onClose(); // Close menu after navigation
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -34,13 +41,13 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose }) => {
       <section className="menu-left">
         <span className="nav-highlight">BetWise</span>
         <section className="menu-items">
-          <button onClick={() => navigate("/home")}>
+          <button onClick={() => handleNavigationClick("/home")}>
             <span className="menu-item-text">Prediction History</span>
           </button>
-          <button onClick={() => navigate("/insights")}>
+          <button onClick={() => handleNavigationClick("/insights")}>
             <span className="menu-item-text">View Insights</span>
           </button>
-          <button onClick={() => navigate("/generate-betslip")}>
+          <button onClick={() => handleNavigationClick("/generate-betslip")}>
             <span className="menu-item-text">Generate BetSlip</span>
           </button>
         </section>

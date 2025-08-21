@@ -18,6 +18,7 @@
   flex-direction: column;
   padding: 0;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  overflow-y: auto; /* Allow scrolling if content is too tall */
 }
 
 /* Right side - Transparent overlay (click to close) */
@@ -37,6 +38,7 @@
   padding: 30px 25px 20px 25px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   margin-bottom: 0;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 /* Menu items container */
@@ -45,6 +47,7 @@
   display: flex;
   flex-direction: column;
   padding: 20px 0;
+  min-height: 0; /* Allow shrinking when needed */
 }
 
 /* Menu item buttons */
@@ -56,6 +59,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   text-align: left;
+  flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 .menu-items button:hover {
@@ -78,6 +82,8 @@
 .menu-footer {
   padding: 20px 25px 30px 25px;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0; /* Prevent shrinking - always visible */
+  margin-top: auto; /* Push to bottom */
 }
 
 /* User profile text */
@@ -123,15 +129,24 @@
   
   .menu .nav-highlight {
     font-size: 1.5rem;
-    padding: 25px 20px 18px 20px;
+    padding: 20px 20px 15px 20px; /* Reduced padding */
+  }
+  
+  .menu-items {
+    padding: 15px 0; /* Reduced padding */
   }
   
   .menu-items button {
-    padding: 16px 20px;
+    padding: 14px 20px; /* Reduced padding */
   }
   
   .menu-footer {
-    padding: 18px 20px 25px 20px;
+    padding: 15px 20px 20px 20px; /* Reduced padding */
+  }
+  
+  .user-profile {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
   }
 }
 
@@ -142,9 +157,72 @@
   
   .menu .nav-highlight {
     font-size: 1.3rem;
+    padding: 18px 18px 12px 18px; /* Further reduced */
+  }
+  
+  .menu-items {
+    padding: 12px 0;
+  }
+  
+  .menu-items button {
+    padding: 12px 18px;
+  }
+  
+  .menu-footer {
+    padding: 12px 18px 18px 18px;
   }
   
   .menu-item-text {
     font-size: 0.9rem;
+  }
+  
+  .user-profile {
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+  }
+}
+
+/* Specific tablet height adjustments */
+@media (max-width: 1024px) and (max-height: 768px) {
+  .menu .nav-highlight {
+    padding: 15px 25px 10px 25px;
+    font-size: 1.4rem;
+  }
+  
+  .menu-items {
+    padding: 10px 0;
+  }
+  
+  .menu-items button {
+    padding: 12px 25px;
+  }
+  
+  .menu-footer {
+    padding: 12px 25px 15px 25px;
+  }
+}
+
+/* Extra short screens */
+@media (max-height: 600px) {
+  .menu .nav-highlight {
+    padding: 10px 25px 8px 25px;
+    font-size: 1.2rem;
+  }
+  
+  .menu-items {
+    padding: 8px 0;
+  }
+  
+  .menu-items button {
+    padding: 10px 25px;
+  }
+  
+  .menu-footer {
+    padding: 8px 25px 12px 25px;
+  }
+  
+  .user-profile {
+    font-size: 0.8rem;
+    margin-bottom: 8px;
   }
 }

@@ -4,7 +4,7 @@ import "../styles/HomePage.css";
 import PredictionPage from "./predictions";
 import { useState, useRef } from "react";
 import { useUser } from "../Hooks/UserContext";
-
+import Footer from "./Footer";
 import NavBar from "./Navbar";
 import {
   getCompetitions,
@@ -135,6 +135,7 @@ const InsightsPage = (): JSX.Element => {
         <h1 className="title">
           View Insights.
         </h1>
+        <p className="subtitle">BETTiNG MADE SiMPLE.</p>
         <section className="league-section" id="competitions">
           <h2 className="section-title">Select Your League</h2>
           <section className="league-buttons">
@@ -325,10 +326,8 @@ const InsightsPage = (): JSX.Element => {
           )}
         </section>
 
-        <section className="history section" id="history">
-          <footer className="footer">
-            © {new Date().getFullYear()} BetWise. All rights reserved.
-          </footer>
+        <section>
+          <Footer />
         </section>
       </>
       {showRoundPopup && activeLeague && (

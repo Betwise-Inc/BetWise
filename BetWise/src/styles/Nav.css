@@ -14,9 +14,11 @@
 }
 
 .navbar-left {
-  margin-left: 5%;
+  margin-left: 0; /* Changed from 5% to 0 to be at very end */
+  padding-left: 2%; /* Add some padding for visual breathing room */
   display: flex;
   align-items: center;
+  flex: 0 0 auto; /* Don't grow or shrink */
 }
 
 .nav-highlight {
@@ -27,11 +29,12 @@
 }
 
 .navbar-links {
-  margin-left: 20%;
+  position: absolute; /* Position absolutely to center perfectly */
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
   display: flex;
   gap: 15%;
   justify-content: center;
-  flex: 1;
 }
 
 .navbar-links a {
@@ -43,10 +46,11 @@
 }
 
 .navbar-right {
-  flex: 1;
+  flex: 0 0 auto; /* Don't grow or shrink */
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  padding-right: 2%; /* Add some padding for symmetry */
 }
 
 /* Hamburger Menu Styles */
@@ -91,18 +95,20 @@
 /* Tablet (max-width: 1024px) */
 @media (max-width: 1024px) {
   .navbar-links {
-    margin-left: 15%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     gap: 15px;
     justify-content: center;
-    flex: 1;
   }
 }
 
 /* Mobile (max-width: 600px) */
 @media (max-width: 600px) {
   .navbar-left {
-    margin-left: 5%;
+    margin-left: 0;
+    padding-left: 1%;
     display: flex;
     align-items: center;
   }
@@ -115,11 +121,12 @@
   }
 
   .navbar-links {
-    margin-left: 12%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     gap: 5%;
     justify-content: center;
-    flex: 1;
   }
 
   .navbar-links a {
@@ -134,5 +141,9 @@
     width: 20px;
     height: 15px;
     margin-right: 8px;
+  }
+
+  .navbar-right {
+    padding-right: 1%;
   }
 }
