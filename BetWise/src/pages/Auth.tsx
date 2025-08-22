@@ -4,16 +4,16 @@ import SignUp from "./signup";
 import { useState } from "react";
 import "../styles/Auth.css";
 const Auth = (): JSX.Element => {
-  const [showLogin, setShowLogin] = useState(true); // Default to showing login
+  const [showLogin, setShowLogin] = useState(true); 
   const [showSignup, setShowSignup] = useState(false);
 
   const handleCreateAccountClick = () => {
-    setShowSignup(true); // Set to show signup form
-    setShowLogin(false); // Hide login form
+    setShowSignup(true);
+    setShowLogin(false); 
   };
   const handleAlreadyHaveAccountClick = () => {
-    setShowSignup(false); // Hide signup form
-    setShowLogin(true); // Show login form
+    setShowSignup(false); 
+    setShowLogin(true);
   };
   return (
     <main className="authentication-page">

@@ -131,11 +131,13 @@ const InsightsPage = (): JSX.Element => {
   return (
     <main className="home-page">
       <>
-        <NavBar />
-        <h1 className="title">
-          View Insights.
-        </h1>
-        <p className="subtitle">BETTiNG MADE SiMPLE.</p>
+        <NavBar navLinks={[]} />
+        <section className="heading-section">
+          <h1 className="title">
+            Welcome to <span className="highlight">BetWise</span>
+          </h1>
+          <p className="subtitle">BETTiNG MADE SiMPLE.</p>
+        </section>
         <section className="league-section" id="competitions">
           <h2 className="section-title">Select Your League</h2>
           <section className="league-buttons">

@@ -16,20 +16,23 @@ const BetSlip = (): JSX.Element => {
   return (
     <main className="home-page">
       <>
-        <NavBar />
-        <h1 className="title">Your Bets</h1>
+        <NavBar navLinks={[]} />
+  
         <section className="heading-section">
+          <h1 className="title">
+            Welcome to <span className="highlight">BetWise</span>
+          </h1>
           <p className="subtitle">BETTiNG MADE SiMPLE.</p>
         </section>
         <section>
           <p className="section-description">
-            Review and manage your active bets.
+            Generate Betslip.
           </p>
         </section>
       </>
       <section>
-          <Footer />
-        </section>
+        <Footer />
+      </section>
     </main>
   );
 };

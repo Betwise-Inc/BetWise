@@ -17,7 +17,13 @@ const HomePage = (): JSX.Element => {
   return (
     <main className="home-page">
       <>
-        <NavBar />
+        <NavBar
+          navLinks={[
+            ["Competitions", "#competitions"],
+            ["Fixtures", "#fixtures"],
+            ["History", "#history"],
+          ]}
+        />
         <section className="heading-section">
           <h1 className="title">
             Welcome to <span className="highlight">BetWise</span>

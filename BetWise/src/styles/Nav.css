@@ -14,11 +14,11 @@
 }
 
 .navbar-left {
-  margin-left: 0; /* Changed from 5% to 0 to be at very end */
-  padding-left: 2%; /* Add some padding for visual breathing room */
+  margin-left: 0;
+  padding-left: 2%;
   display: flex;
   align-items: center;
-  flex: 0 0 auto; /* Don't grow or shrink */
+  flex: 0 0 auto; 
 }
 
 .nav-highlight {
@@ -29,9 +29,9 @@
 }
 
 .navbar-links {
-  position: absolute; /* Position absolutely to center perfectly */
+  position: absolute; 
   left: 50%;
-  transform: translateX(-50%); /* Center horizontally */
+  transform: translateX(-50%); 
   display: flex;
   gap: 15%;
   justify-content: center;
@@ -46,11 +46,11 @@
 }
 
 .navbar-right {
-  flex: 0 0 auto; /* Don't grow or shrink */
+  flex: 0 0 auto; 
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding-right: 2%; /* Add some padding for symmetry */
+  padding-right: 2%; 
 }
 
 /* Hamburger Menu Styles */
@@ -70,14 +70,14 @@
 .hamburger-line {
   width: 100%;
   height: 2px;
-  background-color: #000000; /* Match your navbar link color */
+  background-color: #000000;
   border-radius: 1px;
   transition: all 0.3s ease;
 }
 
 /* Hover effect */
 .hamburger-menu:hover .hamburger-line {
-  background-color: #38bdf8; /* Match your highlight color */
+  background-color: #38bdf8; 
 }
 
 .hamburger-menu.active .hamburger-line:nth-child(1) {

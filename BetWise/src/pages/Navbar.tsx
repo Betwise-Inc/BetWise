@@ -1,27 +1,15 @@
 import React, { useState } from "react";
-// , { useRef, useEffect }
-// import { useUser } from "../Hooks/UserContext";
-
 import "../styles/Nav.css";
-import Menu from "./Menu"; // Import your Menu component
+import Menu from "./Menu";
 
-const NavBar: React.FC = () => {
-  // const { user } = useUser();
-  // const userInitial = user?.email ? user.email.charAt(0).toUpperCase() : "?";
+type NavLink = [string, string]; 
 
+interface NavBarProps {
+  navLinks: NavLink[]; 
+}
+
+const NavBar: React.FC<NavBarProps> = ({ navLinks }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  // const wrapperRef = useRef<HTMLDivElement>(null);
-
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-  //       setDropdownOpen(false);
-  //     }
-  //   };
-
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => document.removeEventListener("mousedown", handleClickOutside);
-  // }, []);
 
   const handleMenuClick = () => {
     setMenuOpen(true);
@@ -44,9 +32,11 @@ const NavBar: React.FC = () => {
         </section>
 
         <section className="navbar-links">
-          <a href="#competitions">Competitions</a>
-          <a href="#fixtures">Fixtures</a>
-          <a href="#history">History</a>
+          {navLinks.map(([label, href], index) => (
+            <a key={index} href={href}>
+              {label}
+            </a>
+          ))}
         </section>
 
         <section className="navbar-right"></section>
