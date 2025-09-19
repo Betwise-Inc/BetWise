@@ -1,10 +1,11 @@
 import axios from "axios";
 
 export interface Fixture {
+  id: number; // unique fixture id
   home_name: string;
   away_name: string;
+  time?: string; 
 }
-
 
 interface FixtureResponse {
   success: boolean;
@@ -12,7 +13,6 @@ interface FixtureResponse {
     fixtures: Fixture[];
   };
 }
-
 
 const BASE_URL = import.meta.env.VITE_API_URL + "/fixtures";
 
@@ -29,10 +29,10 @@ export const fetchFixtures = async (
     });
 
     if (response.data.success === true) {
-  return response.data.data.fixtures;
-} else {
-  throw new Error("API responded with failure");
-}
+      return response.data.data.fixtures;
+    } else {
+      throw new Error("API responded with failure");
+    }
   } catch (err: any) {
     console.error("Error fetching fixtures from API:", err.message);
     throw err;

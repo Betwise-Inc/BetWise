@@ -4,7 +4,7 @@ import { useUser } from "../Hooks/UserContext";
 import LoadingDots from "./loading";
 import NavBar from "./Navbar";
 import Footer from "./Footer";
-
+import LiveScoreSection from "./LiveScoreSection"; 
 const HomePage = (): JSX.Element => {
   const { loading: isUserLoading } = useUser();
 
@@ -18,11 +18,7 @@ const HomePage = (): JSX.Element => {
     <main className="home-page">
       <>
         <NavBar
-          navLinks={[
-            ["Competitions", "#competitions"],
-            ["Fixtures", "#fixtures"],
-            ["History", "#history"],
-          ]}
+          navLinks={[]}
         />
         <section className="heading-section">
           <h1 className="title">
@@ -30,6 +26,10 @@ const HomePage = (): JSX.Element => {
           </h1>
           <p className="subtitle">BETTiNG MADE SiMPLE.</p>
         </section>
+        
+        {/* Replace the old Live-score section with the new component */}
+        <LiveScoreSection />
+        
         <section className="history section" id="history">
           <h2 className="section-title">Prediction History</h2>
           <p className="history-subheading">View previous predictions.</p>

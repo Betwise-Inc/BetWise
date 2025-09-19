@@ -1,4 +1,4 @@
-/* laptop first */
+/* Laptop first */
 .navbar {
   top: 0;
   left: 0;
@@ -51,6 +51,7 @@
   justify-content: flex-end;
   align-items: center;
   padding-right: 2%; 
+  gap: 12px;
 }
 
 /* Hamburger Menu Styles */
@@ -90,6 +91,26 @@
 
 .hamburger-menu.active .hamburger-line:nth-child(3) {
   transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Viewed Insights Icon Button */
+.insights-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1C4D78;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.insights-button:hover {
+  background-color: #163a59;
+  transform: scale(1.1);
 }
 
 /* Tablet (max-width: 1024px) */
@@ -145,5 +166,11 @@
 
   .navbar-right {
     padding-right: 1%;
+    gap: 8px;
+  }
+
+  .insights-button {
+    width: 32px;
+    height: 32px;
   }
 }

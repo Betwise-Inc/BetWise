@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import "../styles/PredictionPage.css";
 import ResultBar from "./result";
+
+import { addViewedInsight} from "../APIconfigs/viewedInsights";
+import type { Insight, TeamStats } from "../APIconfigs/viewedInsights";
+import { useUser } from "../Hooks/UserContext";
+
 type Props = {
   fixture: {
     home_name: string;
@@ -10,7 +15,51 @@ type Props = {
 };
 
 const PredictionPage: React.FC<Props> = ({ fixture, onClose }) => {
-  const [activeTab, setActiveTab] = useState<"insights" | "ai">("insights");
+  const { user } = useUser(); // Logged-in user
+  const [added, setAdded] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  if (!user?.email) {
+    return <p>Please log in to view insights</p>;
+  }
+
+  // Mock team stats
+  const mockHomeStats: TeamStats = {
+    name: fixture.home_name,
+    win: 40,
+    draw: 20,
+    lose: 40,
+  };
+
+  const mockAwayStats: TeamStats = {
+    name: fixture.away_name,
+    win: 30,
+    draw: 35,
+    lose: 15,
+  };
+
+  const handleAdd = async () => {
+    if (!user?.email) return;
+
+    setLoading(true);
+
+    const mockInsight: Insight = {
+      home: mockHomeStats,
+      away: mockAwayStats,
+      goals: 3,
+      both_teams_to_score: true,
+    };
+
+    try {
+      await addViewedInsight(user.email, mockInsight);
+      setAdded(true);
+    } catch (err: any) {
+      console.error("Add insight failed:", err.response?.data || err.message);
+      alert("Failed to add insight");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section className="modal-overlay">
@@ -19,46 +68,28 @@ const PredictionPage: React.FC<Props> = ({ fixture, onClose }) => {
           ✕
         </button>
 
-        {/* Tabs */}
-        <div className="tabs">
+        <section className="prediction-content">
+          <h2 className="prediction-title">Match Insights</h2>
+          <p className="prediction-text">{fixture.home_name} vs {fixture.away_name}</p>
+
+          <div className="Home-outcome">
+            {fixture.home_name}: <ResultBar Win={mockHomeStats.win} Draw={mockHomeStats.draw} Loss={mockHomeStats.lose} />
+          </div>
+          <div className="Away-outcome">
+            {fixture.away_name}: <ResultBar Win={mockAwayStats.win} Draw={mockAwayStats.draw} Loss={mockAwayStats.lose} />
+          </div>
+
+          <p className="goals-overall">Goals Overall: Over 2.5</p>
+          <p className="BTS">Both Teams to Score: Yes</p>
+
           <button
-            className={`tab-button ${activeTab === "insights" ? "active" : ""}`}
-            onClick={() => setActiveTab("insights")}
+            className={`add-viewed-button ${added ? "added" : ""}`}
+            onClick={handleAdd}
+            disabled={added || loading}
           >
-            Numerical Insights
+            {loading ? "Adding..." : added ? "Added" : "Add to Viewed Insights"}
           </button>
-          <button
-            className={`tab-button ${activeTab === "ai" ? "active" : ""}`}
-            onClick={() => setActiveTab("ai")}
-          >
-            BetWise AI
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="tab-content">
-          {activeTab === "insights" && (
-            <section className="prediction-section">
-
-              <p className="prediction-text">
-                {fixture.home_name} vs {fixture.away_name}
-              </p>
-              <p className="Home-outcome">{fixture.home_name}:<ResultBar Win={40} Draw={20} Loss={40} /></p>
-              <p className="Away-outcome">{fixture.away_name}:<ResultBar Win={30} Draw={35} Loss={15} /></p>
-              <p className="goals-overall">Goals Overall :Over 2.5</p>
-              <p className="BTS">Both Teams to Score:Yes</p>
-            </section>
-          )}
-
-          {activeTab === "ai" && (
-            <section className="prediction-section">
-              <h2 className="prediction-title">BetWise AI Predictions</h2>
-              <p className="prediction-text">
-                Our AI model predicts the outcomes of upcoming matches based on historical data.
-              </p>
-            </section>
-          )}
-        </div>
+        </section>
       </section>
     </section>
   );

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "../styles/Nav.css";
 import Menu from "./Menu";
+import ViewedInsights from "./viewedInsights"; // import your modal
+import { FiFileText } from "react-icons/fi"; // paper icon from react-icons
 
 type NavLink = [string, string]; 
 
@@ -10,14 +12,12 @@ interface NavBarProps {
 
 const NavBar: React.FC<NavBarProps> = ({ navLinks }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showInsights, setShowInsights] = useState(false);
 
-  const handleMenuClick = () => {
-    setMenuOpen(true);
-  };
+  const handleMenuClick = () => setMenuOpen(true);
+  const handleMenuClose = () => setMenuOpen(false);
 
-  const handleMenuClose = () => {
-    setMenuOpen(false);
-  };
+  const handleInsightsClick = () => setShowInsights(true);
 
   return (
     <>
@@ -39,10 +39,19 @@ const NavBar: React.FC<NavBarProps> = ({ navLinks }) => {
           ))}
         </section>
 
-        <section className="navbar-right"></section>
+        <section className="navbar-right">
+          <button
+            className="insights-button"
+            onClick={handleInsightsClick}
+            title="Viewed Insights"
+          >
+            <FiFileText size={20} />
+          </button>
+        </section>
       </section>
-      
+
       <Menu isOpen={menuOpen} onClose={handleMenuClose} />
+      {showInsights && <ViewedInsights onClose={() => setShowInsights(false)} />}
     </>
   );
 };
