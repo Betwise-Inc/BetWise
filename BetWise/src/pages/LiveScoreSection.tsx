@@ -1,7 +1,7 @@
 import React from "react";
-import "../styles/LiveScore.css";
-import { getCompetitions } from "../APIconfigs/Competitions"; 
-import { fetchFixtures } from "../APIconfigs/fixtures"; 
+import "../styles/livescore.css";
+import { getCompetitions } from "../APIconfigs/Competitions";
+import { fetchFixtures } from "../APIconfigs/fixtures";
 import { fetchLiveScore } from "../APIconfigs/livescore";
 
 export interface ApiFixture {
@@ -61,23 +61,27 @@ class LiveScoreSection extends React.Component<unknown, State> {
     this.setState({ loading: true, error: null });
     try {
       const competitions = await getCompetitions();
-      
+
       // Find Premier League and set it as default
       const premierLeague = competitions.find(
-        comp => comp.name.toLowerCase().includes('premier league') || 
-                comp.name.toLowerCase().includes('epl') ||
-                comp.name.toLowerCase().includes('english premier')
+        (comp) =>
+          comp.name.toLowerCase().includes("premier league") ||
+          comp.name.toLowerCase().includes("epl") ||
+          comp.name.toLowerCase().includes("english premier")
       );
-      
+
       if (premierLeague) {
-        this.setState({ 
-          competitions, 
-          selectedLeagueId: premierLeague._id, 
-          loading: false 
-        }, () => {
-          // Auto-load Premier League fixtures
-          this.loadFixturesForLeague(premierLeague._id);
-        });
+        this.setState(
+          {
+            competitions,
+            selectedLeagueId: premierLeague._id,
+            loading: false,
+          },
+          () => {
+            // Auto-load Premier League fixtures
+            this.loadFixturesForLeague(premierLeague._id);
+          }
+        );
       } else {
         this.setState({ competitions, loading: false });
       }
@@ -95,7 +99,7 @@ class LiveScoreSection extends React.Component<unknown, State> {
     this.setState({ loading: true, error: null });
     try {
       const apiFixtures = await fetchFixtures(leagueId, round);
-      
+
       // Create initial fixtures without scores
       const fixtures: FixtureVM[] = apiFixtures.map((fx) => ({
         id: fx.id, // Use actual fixture ID
@@ -113,15 +117,19 @@ class LiveScoreSection extends React.Component<unknown, State> {
       this.loadLiveScores(fixtures);
     } catch (err: any) {
       console.error("Error fetching fixtures:", err);
-      this.setState({ error: "Failed to load fixtures", fixtures: [], loading: false });
+      this.setState({
+        error: "Failed to load fixtures",
+        fixtures: [],
+        loading: false,
+      });
     }
   }
 
   async loadLiveScores(fixtures: FixtureVM[]) {
     try {
       // Fetch live scores for all fixtures
-      const liveScorePromises = fixtures.map(fixture => 
-        fetchLiveScore(fixture.id).catch(() => null) // Return null if live score fails
+      const liveScorePromises = fixtures.map(
+        (fixture) => fetchLiveScore(fixture.id).catch(() => null) // Return null if live score fails
       );
 
       const liveScores = await Promise.all(liveScorePromises);
@@ -129,10 +137,10 @@ class LiveScoreSection extends React.Component<unknown, State> {
       // Update fixtures with live score data
       const updatedFixtures = fixtures.map((fixture, index) => {
         const liveScore = liveScores[index];
-        
+
         if (liveScore) {
           // Parse the score string (e.g., "0 - 1" or "2 - 3")
-          const scoreParts = liveScore.scores.score.split(' - ');
+          const scoreParts = liveScore.scores.score.split(" - ");
           const homeScore = scoreParts[0] ? parseInt(scoreParts[0]) : null;
           const awayScore = scoreParts[1] ? parseInt(scoreParts[1]) : null;
 
@@ -197,7 +205,9 @@ class LiveScoreSection extends React.Component<unknown, State> {
 
   formatFixtureDisplay(fixture: FixtureVM) {
     if (fixture.status === "Upcoming") {
-      return `${fixture.homeTeam} vs ${fixture.awayTeam}${fixture.time ? ` - ${fixture.time}` : ""}`;
+      return `${fixture.homeTeam} vs ${fixture.awayTeam}${
+        fixture.time ? ` - ${fixture.time}` : ""
+      }`;
     } else if (fixture.homeScore !== null && fixture.awayScore !== null) {
       // Show actual scores when available
       return `${fixture.homeTeam} ${fixture.homeScore} - ${fixture.awayScore} ${fixture.awayTeam}`;
@@ -208,14 +218,23 @@ class LiveScoreSection extends React.Component<unknown, State> {
   }
 
   render() {
-    const { competitions, selectedLeagueId, fixtures, loading, error, dropdownOpen } = this.state;
+    const {
+      competitions,
+      selectedLeagueId,
+      fixtures,
+      loading,
+      error,
+      dropdownOpen,
+    } = this.state;
     const selectedLeagueName =
       competitions.find((c) => c._id === selectedLeagueId)?.name || "None";
 
     return (
       <section className="live-score-section" id="live-score">
         <h2 className="live-score-title">Live Score</h2>
-        <p className="live-score-subheading">Stay updated with the latest scores.</p>
+        <p className="live-score-subheading">
+          Stay updated with the latest scores.
+        </p>
 
         {/* Filter by league */}
         <div className="live-score-league-section">
@@ -228,9 +247,13 @@ class LiveScoreSection extends React.Component<unknown, State> {
                 aria-expanded={dropdownOpen}
               >
                 Filter by league
-                <span className="dropdown-arrow">{dropdownOpen ? '▲' : '▼'}</span>
+                <span className="dropdown-arrow">
+                  {dropdownOpen ? "▲" : "▼"}
+                </span>
               </button>
-              <span className="live-score-selected-league">Selected: {selectedLeagueName}</span>
+              <span className="live-score-selected-league">
+                Selected: {selectedLeagueName}
+              </span>
             </div>
 
             {dropdownOpen && (
@@ -246,9 +269,13 @@ class LiveScoreSection extends React.Component<unknown, State> {
                     onClick={() => this.handleChooseLeague(league._id)}
                   >
                     <div className="live-score-league-text">
-                      <div className="live-score-league-name">{league.name}</div>
+                      <div className="live-score-league-name">
+                        {league.name}
+                      </div>
                       {league.country && (
-                        <div className="live-score-league-country">{league.country}</div>
+                        <div className="live-score-league-country">
+                          {league.country}
+                        </div>
                       )}
                     </div>
                   </li>
@@ -275,8 +302,14 @@ class LiveScoreSection extends React.Component<unknown, State> {
                   <div className="live-score-fixture-content">
                     {this.formatFixtureDisplay(fixture)}
                   </div>
-                  <div className={`live-score-fixture-status ${this.getStatusClass(fixture.status)}`}>
-                    {fixture.status === "Live" && fixture.minute ? `${fixture.minute}'` : fixture.status}
+                  <div
+                    className={`live-score-fixture-status ${this.getStatusClass(
+                      fixture.status
+                    )}`}
+                  >
+                    {fixture.status === "Live" && fixture.minute
+                      ? `${fixture.minute}'`
+                      : fixture.status}
                   </div>
                 </li>
               ))}
