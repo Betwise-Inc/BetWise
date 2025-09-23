@@ -7,7 +7,7 @@ import { useUser } from "../Hooks/UserContext";
 import Footer from "./Footer";
 import NavBar from "./Navbar";
 import LoadingDots from "./loading";
-import "../styles/InsightsPage.css";
+import "../styles/insightsPage.css";
 import {
   getCompetitions,
   AddCompetition,
@@ -28,25 +28,27 @@ type Competition = {
 const InsightsPage = (): JSX.Element => {
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const fixturesRef = useRef<HTMLElement>(null);
-  
+
   // Loading States
   const [loadingCompetitions, setLoadingCompetitions] = useState(true);
   const [loadingFixtures, setLoadingFixtures] = useState(false);
-  const [competitionsError, setCompetitionsError] = useState<string | null>(null);
+  const [competitionsError, setCompetitionsError] = useState<string | null>(
+    null
+  );
   const [fixturesError, setFixturesError] = useState<string | null>(null);
-  
+
   // Data States
   const [selectedLeague, setSelectedLeague] = useState("2");
   const [competitions, setCompetitions] = useState<Competition[]>([]);
   const [apiFixtures, setApiFixtures] = useState<Fixture[]>([]);
-  
+
   // Modal States
   const [showAddForm, setShowAddForm] = useState(false);
   const [showRoundPopup, setShowRoundPopup] = useState(false);
   const [showPredictionPopup, setShowPredictionPopup] = useState(false);
   const [addingCompetition, setAddingCompetition] = useState(false);
   const [updatingRound, setUpdatingRound] = useState(false);
-  
+
   // Form States
   const [roundInput, setRoundInput] = useState("");
   const [activeLeague, setActiveLeague] = useState<Competition | null>(null);
@@ -66,7 +68,7 @@ const InsightsPage = (): JSX.Element => {
     const fetchCompetitions = async () => {
       setLoadingCompetitions(true);
       setCompetitionsError(null);
-      
+
       try {
         const data = await getCompetitions();
         setCompetitions(data);
@@ -92,7 +94,7 @@ const InsightsPage = (): JSX.Element => {
 
         setLoadingFixtures(true);
         setFixturesError(null);
-        
+
         try {
           const fetched = await fetchFixtures(
             selectedComp._id,
@@ -127,7 +129,7 @@ const InsightsPage = (): JSX.Element => {
     setLoadingFixtures(true);
     setFixturesError(null);
     setApiFixtures([]); // Clear previous fixtures immediately
-    
+
     try {
       const fetched = await fetchFixtures(selectedComp._id, round);
       setApiFixtures(fetched);
@@ -141,13 +143,17 @@ const InsightsPage = (): JSX.Element => {
   };
 
   const handleAddCompetition = async () => {
-    if (!newCompetition._id || !newCompetition.name || !newCompetition.country) {
+    if (
+      !newCompetition._id ||
+      !newCompetition.name ||
+      !newCompetition.country
+    ) {
       alert("Please fill in all required fields (ID, Name, Country)");
       return;
     }
 
     setAddingCompetition(true);
-    
+
     try {
       const { _id, name, country, logo, round } = newCompetition;
       await AddCompetition(_id, name, country, logo, round);
@@ -160,7 +166,7 @@ const InsightsPage = (): JSX.Element => {
         logo: "",
         round: "",
       });
-      
+
       // Refresh competitions
       const data = await getCompetitions();
       setCompetitions(data);
@@ -176,7 +182,7 @@ const InsightsPage = (): JSX.Element => {
     const confirmDelete = window.confirm(
       `Are you sure you want to delete ${league.name}?`
     );
-    
+
     if (!confirmDelete) {
       setOpenDropdownId(null);
       return;
@@ -209,22 +215,20 @@ const InsightsPage = (): JSX.Element => {
     }
 
     setUpdatingRound(true);
-    
+
     try {
       await updateCompetitionRound(activeLeague._id, roundInput);
-      
+
       // Update local state
       setCompetitions((prev) =>
         prev.map((comp) =>
-          comp._id === activeLeague._id
-            ? { ...comp, round: roundInput }
-            : comp
+          comp._id === activeLeague._id ? { ...comp, round: roundInput } : comp
         )
       );
-      
+
       setShowRoundPopup(false);
       setRoundInput("");
-      
+
       // Refresh fixtures if this is the selected league
       if (selectedLeague === activeLeague._id.toString()) {
         handleLeagueClick(selectedLeague);
@@ -259,7 +263,7 @@ const InsightsPage = (): JSX.Element => {
 
         <section className="league-section" id="competitions">
           <h2 className="section-title">Select Your League</h2>
-          
+
           {/* Loading competitions */}
           {loadingCompetitions && (
             <div className="loading-container">
@@ -272,7 +276,7 @@ const InsightsPage = (): JSX.Element => {
           {competitionsError && (
             <div className="error-container">
               <p className="error-message">{competitionsError}</p>
-              <button 
+              <button
                 className="retry-button"
                 onClick={() => window.location.reload()}
               >
@@ -287,11 +291,16 @@ const InsightsPage = (): JSX.Element => {
               {competitions.length > 0 ? (
                 <section className="league-buttons">
                   {competitions.map((league) => (
-                    <section className="league-wrapper" key={league._id.toString()}>
+                    <section
+                      className="league-wrapper"
+                      key={league._id.toString()}
+                    >
                       <button
                         onClick={() => handleLeagueClick(league._id.toString())}
                         className={`league-button ${
-                          selectedLeague === league._id.toString() ? "selected" : ""
+                          selectedLeague === league._id.toString()
+                            ? "selected"
+                            : ""
                         }`}
                         disabled={loadingFixtures}
                       >
@@ -302,13 +311,16 @@ const InsightsPage = (): JSX.Element => {
                             width={20}
                             height={20}
                             onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
+                              (e.target as HTMLImageElement).style.display =
+                                "none";
                             }}
                           />
                         </section>
 
                         <section className="league-text">
-                          <section className="league-name">{league.name}</section>
+                          <section className="league-name">
+                            {league.name}
+                          </section>
                           <section className="league-country">
                             {league.country}
                           </section>
@@ -322,7 +334,9 @@ const InsightsPage = (): JSX.Element => {
                             aria-label="More options"
                             onClick={() =>
                               setOpenDropdownId(
-                                openDropdownId === league._id ? null : league._id
+                                openDropdownId === league._id
+                                  ? null
+                                  : league._id
                               )
                             }
                           >
@@ -441,8 +455,8 @@ const InsightsPage = (): JSX.Element => {
                 }
                 disabled={addingCompetition}
               />
-              <button 
-                onClick={handleAddCompetition} 
+              <button
+                onClick={handleAddCompetition}
                 className="submit-button"
                 disabled={addingCompetition}
               >
@@ -462,7 +476,7 @@ const InsightsPage = (): JSX.Element => {
         {/* Fixtures Section */}
         <section className="fixtures section" id="fixtures" ref={fixturesRef}>
           <h2 className="section-title">Fixtures</h2>
-          
+
           {/* Loading fixtures */}
           {loadingFixtures && (
             <div className="loading-container">
@@ -475,9 +489,11 @@ const InsightsPage = (): JSX.Element => {
           {fixturesError && !loadingFixtures && (
             <div className="error-container">
               <p className="error-message">{fixturesError}</p>
-              <button 
+              <button
                 className="retry-button"
-                onClick={() => selectedLeague && handleLeagueClick(selectedLeague)}
+                onClick={() =>
+                  selectedLeague && handleLeagueClick(selectedLeague)
+                }
               >
                 Retry
               </button>
