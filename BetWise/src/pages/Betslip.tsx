@@ -7,7 +7,7 @@ import LoadingDots from "./loading";
 import NavBar from "./Navbar";
 import Footer from "./Footer";
 import { getCompetitions } from "../APIconfigs/Competitions";
-import "../styles/Betslip.css";
+import "../styles/betslip.css";
 
 export interface Comp {
   _id: number;
