@@ -123,8 +123,8 @@ class BetSlipGenerator extends React.Component<unknown, State> {
   }
 
   generateLeagueBetslip(leagueId: number) {
-    const { competitions } = this.state;
-    const selectedLeague = competitions.find(c => c._id === leagueId);
+    // const { competitions } = this.state;
+    // const selectedLeague = competitions.find(c => c._id === leagueId);
     
     // Mock betslip for selected league
     const mockLeagueBetslip: GeneratedBetSlip = {
@@ -225,7 +225,7 @@ class BetSlipGenerator extends React.Component<unknown, State> {
         </div>
         
         <div className="betslip-selections">
-          {betslip.selections.map((selection, index) => (
+          {betslip.selections.map((selection) => (
             <div key={selection.id} className="betslip-selection">
               <div className="selection-match">
                 {selection.homeTeam} vs {selection.awayTeam}

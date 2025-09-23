@@ -21,7 +21,6 @@ const LandingPage = (): JSX.Element => {
                 </section>
             </section>
         </section>
-
     </main>
   );
 };
