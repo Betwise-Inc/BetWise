@@ -93,8 +93,9 @@
   transform: rotate(-45deg) translate(7px, -6px);
 }
 
-/* Viewed Insights Icon Button */
+/* Viewed Insights Icon Button with Tooltip */
 .insights-button {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,6 +112,52 @@
 .insights-button:hover {
   background-color: #163a59;
   transform: scale(1.1);
+}
+
+/* Tooltip */
+.insights-button::after {
+  content: 'Viewed insights';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1C4D78;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  margin-top: 8px;
+  z-index: 1001;
+}
+
+/* Tooltip arrow */
+.insights-button::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #1C4D78;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  margin-top: 3px;
+  z-index: 1001;
+}
+
+/* Show tooltip on hover */
+.insights-button:hover::after,
+.insights-button:hover::before {
+  opacity: 1;
 }
 
 /* Tablet (max-width: 1024px) */
@@ -172,5 +219,19 @@
   .insights-button {
     width: 32px;
     height: 32px;
+  }
+
+  /* Smaller tooltip on mobile */
+  .insights-button::after {
+    font-size: 10px;
+    padding: 4px 8px;
+    margin-top: 6px;
+  }
+
+  .insights-button::before {
+    border-left-width: 4px;
+    border-right-width: 4px;
+    border-bottom-width: 4px;
+    margin-top: 2px;
   }
 }

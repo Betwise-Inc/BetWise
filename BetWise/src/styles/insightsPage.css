@@ -1,0 +1,190 @@
+/* Additional CSS for InsightsPage Loading States */
+
+/* Loading Container */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.loading-container p {
+  margin-top: 16px;
+  color: #1C4D78;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* Error Container */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 1rem;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.retry-button {
+  background-color: #1C4D78;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.retry-button:hover {
+  background-color: #163a59;
+}
+
+/* No Data Container */
+.no-data-container {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.no-data-container p {
+  margin: 8px 0;
+  font-size: 1rem;
+}
+
+.no-data-container p:first-child {
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Disabled States */
+.league-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.league-button:disabled:hover {
+  background-color: #1C4D78;
+  box-shadow: none;
+}
+
+.add-competition-button:disabled,
+.submit-button:disabled,
+.modal-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.add-competition-form input:disabled {
+  background-color: #f9fafb;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Loading in buttons */
+.submit-button,
+.modal-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+}
+
+/* Form validation styles */
+.add-competition-form input[placeholder*="*"] {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.add-competition-form input[placeholder*="*"]:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Modal loading states */
+.modal input:disabled {
+  background-color: #f9fafb;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.close-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Fixtures section loading states */
+.fixtures.section {
+  min-height: 200px;
+}
+
+.no-fixtures {
+  text-align: center;
+  color: #6b7280;
+  padding: 40px 20px;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+/* League wrapper loading state */
+.league-wrapper {
+  position: relative;
+}
+
+/* Image error handling */
+.league-logo img[style*="display: none"] + * {
+  padding-left: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .loading-container,
+  .error-container,
+  .no-data-container {
+    padding: 30px 15px;
+    margin: 15px 0;
+  }
+
+  .error-message {
+    font-size: 0.9rem;
+  }
+
+  .retry-button {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .loading-container p {
+    font-size: 0.9rem;
+  }
+
+  .error-container {
+    padding: 20px 10px;
+  }
+
+  .error-message {
+    font-size: 0.85rem;
+  }
+}

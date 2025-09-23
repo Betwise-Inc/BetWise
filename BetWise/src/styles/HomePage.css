@@ -246,7 +246,15 @@ body,html {
   background-color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
 }
-
+.fixture-item::after{
+  content:"click to view insights";
+  display:block;
+  font-size:0.8rem;
+  opacity:0.7;
+  margin-top:4px;
+  color:#1C4D78;
+  
+}
 .no-fixtures {
   opacity: 0.6;
   text-align: center;

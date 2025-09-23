@@ -1,0 +1,348 @@
+/* Prediction History Styles - Add to your existing CSS */
+
+/* Accuracy Stats Container */
+.accuracy-stats-container {
+  background: linear-gradient(135deg, #1C4D78 0%, #2563eb 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(28, 77, 120, 0.2);
+}
+
+.accuracy-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.stat-card.overall {
+  background: rgba(34, 197, 94, 0.2);
+  border: 2px solid rgba(34, 197, 94, 0.3);
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.stat-card.overall .stat-value {
+  color: #10b981;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.total-predictions {
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+/* Filter Buttons */
+.prediction-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background-color: rgba(28, 77, 120, 0.1);
+  color: #1C4D78;
+  border: 2px solid rgba(28, 77, 120, 0.2);
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  background-color: rgba(28, 77, 120, 0.15);
+  transform: translateY(-1px);
+}
+
+.filter-btn.active {
+  background-color: #1C4D78;
+  color: white;
+  box-shadow: 0 2px 8px rgba(28, 77, 120, 0.3);
+}
+
+/* Predictions Container */
+.predictions-container {
+  width: 100%;
+}
+
+.predictions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Prediction Item */
+.prediction-item {
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(28, 77, 120, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.prediction-item:hover {
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(28, 77, 120, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Prediction Header */
+.prediction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(28, 77, 120, 0.1);
+}
+
+.match-info .teams {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1C4D78;
+  margin-bottom: 4px;
+}
+
+.match-date {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.final-score {
+  background: linear-gradient(135deg, #1C4D78 0%, #2563eb 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* Prediction Details */
+.prediction-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prediction-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.prediction-type {
+  font-weight: 600;
+  color: #374151;
+  min-width: 140px;
+}
+
+.prediction-comparison {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.predicted {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #1d4ed8;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.actual {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Result Icons */
+.result-correct {
+  background-color: #10b981;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.result-incorrect {
+  background-color: #ef4444;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* Prediction Probabilities */
+.prediction-probabilities {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(28, 77, 120, 0.1);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.prob-item {
+  background-color: rgba(28, 77, 120, 0.05);
+  color: #1C4D78;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .accuracy-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .prediction-filters {
+    gap: 8px;
+  }
+
+  .filter-btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .prediction-item {
+    padding: 16px;
+  }
+
+  .prediction-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .final-score {
+    align-self: center;
+    min-width: 80px;
+  }
+
+  .prediction-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .prediction-type {
+    min-width: auto;
+    text-align: center;
+  }
+
+  .prediction-comparison {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .prediction-probabilities {
+    gap: 6px;
+  }
+
+  .prob-item {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .accuracy-stats-container {
+    padding: 16px;
+  }
+
+  .accuracy-stats {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .stat-card {
+    padding: 12px;
+  }
+
+  .stat-value {
+    font-size: 1.3rem;
+  }
+
+  .match-info .teams {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .final-score {
+    font-size: 1rem;
+    padding: 6px 12px;
+  }
+
+  .predicted,
+  .actual {
+    font-size: 0.8rem;
+    padding: 3px 6px;
+  }
+
+  .result-correct,
+  .result-incorrect {
+    width: 20px;
+    height: 20px;
+    font-size: 0.8rem;
+  }
+}

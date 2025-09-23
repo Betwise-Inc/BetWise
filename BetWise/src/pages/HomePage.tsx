@@ -5,6 +5,7 @@ import LoadingDots from "./loading";
 import NavBar from "./Navbar";
 import Footer from "./Footer";
 import LiveScoreSection from "./LiveScoreSection"; 
+import PredictionHistory from "./history";
 const HomePage = (): JSX.Element => {
   const { loading: isUserLoading } = useUser();
 
@@ -29,11 +30,7 @@ const HomePage = (): JSX.Element => {
         
         {/* Replace the old Live-score section with the new component */}
         <LiveScoreSection />
-        
-        <section className="history section" id="history">
-          <h2 className="section-title">Prediction History</h2>
-          <p className="history-subheading">View previous predictions.</p>
-        </section>
+        <PredictionHistory />
         <section>
           <Footer />
         </section>
