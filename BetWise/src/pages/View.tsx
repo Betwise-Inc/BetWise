@@ -7,7 +7,7 @@ import { useUser } from "../Hooks/UserContext";
 import Footer from "./Footer";
 import NavBar from "./Navbar";
 import LoadingDots from "./loading";
-import "../styles/insightsPage.css";
+// import "../styles/insightsPage.css";
 import {
   getCompetitions,
   AddCompetition,
