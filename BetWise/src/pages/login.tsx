@@ -7,7 +7,9 @@ import {
 } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import "../styles/login.css";
+import { useUser } from "../Hooks/UserContext";
 type LoginFormProps = {
   isActive: boolean;
   onCreateAccountClick: () => void;
@@ -19,12 +21,21 @@ const Login: React.FC<LoginFormProps> = ({ onCreateAccountClick }) => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const { user } = useUser(); // ⬅️ get user from context
+
+  // ⬅️ Option 2: redirect once user exists
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, [user, navigate]);
+
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/home");
+      // 🚫 remove navigate("/home") here, let useEffect handle it
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -38,20 +49,16 @@ const Login: React.FC<LoginFormProps> = ({ onCreateAccountClick }) => {
     const provider = new GoogleAuthProvider();
 
     try {
-      
       const result = await signInWithPopup(auth, provider);
-      navigate("/home");
       const user = result.user;
-      
+
       if (user && user.email) {
         const existingUser = await getUserByEmail(user.email);
-        
-      
         if (!existingUser) {
           await createUser(user.email);
         }
       }
-      
+      // 🚫 remove navigate("/home") here too
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
