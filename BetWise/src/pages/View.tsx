@@ -245,7 +245,13 @@ const InsightsPage = (): JSX.Element => {
   if (isUserLoading) {
     return (
       <section className="loading">
-        <LoadingDots numDots={10} radius={60} speed={0.8} size={10} />
+        <LoadingDots
+          numDots={10}
+          radius={60}
+          speed={0.8}
+          size={15}
+          color="#1C4D78"
+        />
       </section>
     );
   }
@@ -265,12 +271,17 @@ const InsightsPage = (): JSX.Element => {
           <h2 className="section-title">Select Your League</h2>
 
           {/* Loading competitions */}
-          {loadingCompetitions && (
-            <div className="loading-container">
-              <LoadingDots numDots={5} radius={30} speed={0.6} size={8} />
-              <p>Loading competitions...</p>
-            </div>
-          )}
+          {/* {loadingCompetitions && (
+            <section className="loading">
+              <LoadingDots
+                numDots={10}
+                radius={60}
+                speed={0.8}
+                size={15}
+                color="#1C4D78"
+              />
+            </section>
+          )} */}
 
           {/* Error loading competitions */}
           {competitionsError && (
@@ -461,10 +472,15 @@ const InsightsPage = (): JSX.Element => {
                 disabled={addingCompetition}
               >
                 {addingCompetition ? (
-                  <>
-                    <LoadingDots numDots={3} radius={10} speed={0.8} size={4} />
-                    Adding...
-                  </>
+                  <section className="loading">
+                    <LoadingDots
+                      numDots={10}
+                      radius={60}
+                      speed={0.8}
+                      size={15}
+                      color="#1C4D78"
+                    />
+                  </section>
                 ) : (
                   "Submit"
                 )}
@@ -476,27 +492,24 @@ const InsightsPage = (): JSX.Element => {
         {/* Fixtures Section */}
         <section className="fixtures section" id="fixtures" ref={fixturesRef}>
           <h2 className="section-title">Fixtures</h2>
-
-          {/* Loading fixtures */}
+{/* 
+          Loading fixtures
           {loadingFixtures && (
-            <div className="loading-container">
-              <LoadingDots numDots={5} radius={30} speed={0.6} size={8} />
-              <p>Loading fixtures...</p>
-            </div>
-          )}
+            <section className="loading">
+              <LoadingDots
+                numDots={8}
+                radius={40}
+                speed={0.6}
+                size={15}
+                color="#1C4D78"
+              />
+            </section>
+          )} */}
 
           {/* Error loading fixtures */}
           {fixturesError && !loadingFixtures && (
             <div className="error-container">
               <p className="error-message">{fixturesError}</p>
-              <button
-                className="retry-button"
-                onClick={() =>
-                  selectedLeague && handleLeagueClick(selectedLeague)
-                }
-              >
-                Retry
-              </button>
             </div>
           )}
 

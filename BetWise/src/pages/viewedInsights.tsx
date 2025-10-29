@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getViewedInsightsByEmail, deleteViewedInsight } from "../APIconfigs/viewedInsights";
 import type { Insight, ViewedInsights as VI } from "../APIconfigs/viewedInsights";
 import { useUser } from "../Hooks/UserContext";
+import LoadingDots from "./loading";
 
 type Props = {
   onClose: () => void;
@@ -54,14 +55,22 @@ const ViewedInsights: React.FC<Props> = ({ onClose }) => {
     );
   }
 
+  if (loading) {
+    return (
+      <div className="modal-overlay" style={{ background: 'rgba(0, 0, 0, 0.45)' }}>
+        <section className="loading">
+          <LoadingDots numDots={10} radius={60} speed={0.8} size={15} color="#38bdf8"/>
+        </section>
+      </div>
+    );
+  }
+
   return (
     <div className="modal-overlay">
       <div className="modal">
         <button className="close-button" onClick={onClose}>✕</button>
         <h3>Viewed Insights</h3>
-        {loading ? (
-          <p className="loading">Loading...</p>
-        ) : insights.length === 0 ? (
+        {insights.length === 0 ? (
           <p className="no-fixtures">No viewed insights found.</p>
         ) : (
           <div className="modal-scroll">

@@ -6,10 +6,8 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import "../styles/login.css";
-import { useUser } from "../Hooks/UserContext";
+
 type LoginFormProps = {
   isActive: boolean;
   onCreateAccountClick: () => void;
@@ -19,23 +17,14 @@ const Login: React.FC<LoginFormProps> = ({ onCreateAccountClick }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
-
-  const { user } = useUser(); // ⬅️ get user from context
-
-  // ⬅️ Option 2: redirect once user exists
-  useEffect(() => {
-    if (user) {
-      navigate("/home");
-    }
-  }, [user, navigate]);
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
+    setError("");
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // 🚫 remove navigate("/home") here, let useEffect handle it
+      // Auth.tsx will handle the redirect
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -47,6 +36,7 @@ const Login: React.FC<LoginFormProps> = ({ onCreateAccountClick }) => {
 
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
+    setError("");
 
     try {
       const result = await signInWithPopup(auth, provider);
@@ -58,7 +48,7 @@ const Login: React.FC<LoginFormProps> = ({ onCreateAccountClick }) => {
           await createUser(user.email);
         }
       }
-      // 🚫 remove navigate("/home") here too
+      // Auth.tsx will handle the redirect
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -67,6 +57,7 @@ const Login: React.FC<LoginFormProps> = ({ onCreateAccountClick }) => {
       }
     }
   };
+
   return (
     <section className="login-container">
       <h2 className="login-title">Login</h2>

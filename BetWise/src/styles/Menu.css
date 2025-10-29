@@ -66,9 +66,17 @@
 }
 
 .menu-items button:active {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+.menu-items button.selected {
   background-color: rgba(255, 255, 255, 0.2);
+  border-left: 3px solid #fff; /* Optional: adds a visual indicator */
 }
 
+/* Optional: reduce hover effect on selected items */
+.menu-items button.selected:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
 
 .menu-item-text {
   color: white;

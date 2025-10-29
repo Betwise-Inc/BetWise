@@ -378,7 +378,7 @@ const BetSlip = (): JSX.Element => {
   if (isUserLoading)
     return (
       <section className="loading">
-        <LoadingDots numDots={10} radius={60} speed={0.8} size={10} />
+        <LoadingDots numDots={10} radius={60} speed={0.8} size={15} color="#1C4D78" />
       </section>
     );
 

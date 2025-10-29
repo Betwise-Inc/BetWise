@@ -5,7 +5,7 @@ interface LoadingDotsProps {
   radius?: number;  // distance from center
   speed?: number;   // rotations per second
   size?: number;    // size of dots in px
-  backgroundColor?: string; // optional background color for matching text
+  color?: string;   // color for both dots and text
 }
 
 const LoadingDots: React.FC<LoadingDotsProps> = ({
@@ -13,6 +13,7 @@ const LoadingDots: React.FC<LoadingDotsProps> = ({
   radius = 40,
   speed = 0.5,
   size = 8,
+  color = "#1C4D78",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const angleRef = useRef(0);
@@ -49,7 +50,7 @@ const LoadingDots: React.FC<LoadingDotsProps> = ({
 
   return (
     <section
-    className="loading-container"
+      className="loading-container"
       ref={containerRef}
       style={{
         position: "relative",
@@ -64,7 +65,7 @@ const LoadingDots: React.FC<LoadingDotsProps> = ({
           top: "55%",
           left: "55%",
           transform: "translate(-50%, -50%)",
-          color: "#1C4D78",
+          color: color,
           fontWeight: "bold",
           fontSize: "1rem",
           pointerEvents: "none",
@@ -84,7 +85,7 @@ const LoadingDots: React.FC<LoadingDotsProps> = ({
             left: "50%",
             width: `${size}px`,
             height: `${size}px`,
-            backgroundColor: "#1C4D78",
+            backgroundColor: color,
             borderRadius: "50%",
             transform: "translate(0, 0)",
             opacity: 0.3,

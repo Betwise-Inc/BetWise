@@ -1,6 +1,6 @@
 import React from "react";
 import { auth } from "../../firebaseConfig";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "../Hooks/UserContext";
 import "../styles/Menu.css"; 
 
@@ -12,6 +12,8 @@ interface MenuProps {
 const Menu: React.FC<MenuProps> = ({ isOpen, onClose }) => {
   const { user } = useUser();
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const handleLogoutClick = async () => {
     try {
@@ -41,13 +43,22 @@ const Menu: React.FC<MenuProps> = ({ isOpen, onClose }) => {
       <section className="menu-left">
         <span className="nav-highlight">BetWise</span>
         <section className="menu-items">
-          <button onClick={() => handleNavigationClick("/home")}>
+          <button 
+            onClick={() => handleNavigationClick("/home")}
+            className={currentPath === "/home" ? "selected" : ""}
+          >
             <span className="menu-item-text">Prediction History</span>
           </button>
-          <button onClick={() => handleNavigationClick("/insights")}>
+          <button 
+            onClick={() => handleNavigationClick("/insights")}
+            className={currentPath === "/insights" ? "selected" : ""}
+          >
             <span className="menu-item-text">View Insights</span>
           </button>
-          <button onClick={() => handleNavigationClick("/generate-betslip")}>
+          <button 
+            onClick={() => handleNavigationClick("/generate-betslip")}
+            className={currentPath === "/generate-betslip" ? "selected" : ""}
+          >
             <span className="menu-item-text">Generate BetSlip</span>
           </button>
         </section>
